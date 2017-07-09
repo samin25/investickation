@@ -77,8 +77,10 @@ public class TickGuideMasterActivity extends AppCompatActivity implements
         transaction.commit();
     }
 
+
     @Override
     public void onBackPressed() {
+        // TODO: fix back button ! -- Works
         int count = getSupportFragmentManager().getBackStackEntryCount();
         if (count == 0) {
             Intent homeIntent = new Intent(TickGuideMasterActivity.this, MainActivity.class);
@@ -86,21 +88,24 @@ public class TickGuideMasterActivity extends AppCompatActivity implements
             finish();
             super.onBackPressed();
         } else if (count > 0) {
-            getSupportFragmentManager().popBackStack();
+            super.onBackPressed();
+            getSupportFragmentManager().popBackStackImmediate();
         }
     }
+
+
 
     @Override
     public void onTickListItemClickListener(Tick mTick) {
         tickGuideDetailFragment = TickGuideDetailFragment.newInstance(KEY_TICK_DETAIL, mTick);
-        performReplaceFragmentTransaction(tickGuideDetailFragment, true, true);
+        performAddFragmentTransaction(tickGuideDetailFragment, true); // fixed tick guide back flow
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        mFragmentManager.putFragment(outState, "tickGuideDetail", tickGuideDetailFragment);
-        mFragmentManager.putFragment(outState, "tickGuideList", tickGuideListFragment);
-        mFragmentManager.putFragment(outState, "tickMap", tickMapFragment);
+        if(tickGuideDetailFragment != null) mFragmentManager.putFragment(outState, "tickGuideDetail", tickGuideDetailFragment);
+        if(tickGuideListFragment != null) mFragmentManager.putFragment(outState, "tickGuideList", tickGuideListFragment);
+        if(tickMapFragment != null) mFragmentManager.putFragment(outState, "tickMap", tickMapFragment);
     }
 }

@@ -53,6 +53,8 @@ public class TicksListAdapter extends RecyclerView.Adapter<TicksListAdapter.Tick
                 holder.txtTickSpecies.setText(mTick.getSpecies());
                 Picasso.with(mContext).load(mTick.getImageUrl()).into(holder.imageViewTick);
                 holder.txtTickDetail.setText(R.string.tick_click_here_for_details);
+//                holder.txtTickSeason.setText(mTick.getSeason());
+//                holder.txtTickGeoLocation.setText(mTick.getGeoLocation());
             }
         }
     }
@@ -148,6 +150,8 @@ public class TicksListAdapter extends RecyclerView.Adapter<TicksListAdapter.Tick
         private TextView txtTickSpecies;
         private TextView txtTickDetail;
         private ImageView imageViewTick;
+//        private TextView txtTickSeason;
+//        private TextView txtTickGeoLocation;
 
 
         public TickViewHolder(View itemView) {
@@ -157,6 +161,8 @@ public class TicksListAdapter extends RecyclerView.Adapter<TicksListAdapter.Tick
             txtTickSpecies = (TextView) itemView.findViewById(R.id.textView_tickRecyclerItem_species);
             txtTickDetail = (TextView) itemView.findViewById(R.id.textView_tickRecyclerItem_tickDetail);
             imageViewTick = (ImageView) itemView.findViewById(R.id.imageView_tickRecyclerItem_image);
+//            txtTickSeason = (TextView) itemView.findViewById(R.id.textView_tickRecyclerItem_tickSeason);
+//            txtTickGeoLocation = (TextView) itemView.findViewById(R.id.textView_tickRecyclerItem_tickGeoLocation);
         }
     }
 

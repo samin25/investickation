@@ -2,8 +2,10 @@ package com.sfsu.entities;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.internal.Streams;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +42,10 @@ public class Tick implements Parcelable, Entity {
     private String description;
     @SerializedName("image_url")
     private String imageUrl;
+    @SerializedName("seasonality")
+    private String season;
+    @SerializedName("geo_location")
+    private String geo_location;
     private String found_near_habitat;
     private long created_at, updated_at;
     private transient boolean isStored;
@@ -62,11 +68,13 @@ public class Tick implements Parcelable, Entity {
      * @param known_for
      * @param description
      * @param imageUrl
+     * @param season
+     * @param geo_location
      * @param found_near_habitat
      * @param created_at
      * @param updated_at
      */
-    public Tick(String id, String tickName, String scientific_name, String species, String known_for, String description, String imageUrl, String found_near_habitat, long created_at, long updated_at) {
+    public Tick(String id, String tickName, String scientific_name, String species, String known_for, String description, String imageUrl, String season, String geo_location, String found_near_habitat, long created_at, long updated_at) {
         this.id = id;
         this.tickName = tickName;
         this.scientific_name = scientific_name;
@@ -74,6 +82,8 @@ public class Tick implements Parcelable, Entity {
         this.known_for = known_for;
         this.description = description;
         this.imageUrl = imageUrl;
+        this.season = season;
+        this.geo_location = geo_location;
         this.found_near_habitat = found_near_habitat;
         this.created_at = created_at;
         this.updated_at = updated_at;
@@ -86,13 +96,17 @@ public class Tick implements Parcelable, Entity {
      * @param species
      * @param known_for
      * @param description
+     * @param season
+     * @param geo_location
      * @param image
      */
-    public Tick(String name, String species, String known_for, String description) {
+    public Tick(String name, String species, String known_for, String description, String season, String geo_location) {
         this.tickName = name;
         this.species = species;
         this.known_for = known_for;
         this.description = description;
+        this.season = season;
+        this.geo_location = geo_location;
     }
 
     protected Tick(Parcel in) {
@@ -102,8 +116,10 @@ public class Tick implements Parcelable, Entity {
         species = in.readString();
         known_for = in.readString();
         description = in.readString();
-        imageUrl = in.readString();
         found_near_habitat = in.readString();
+        imageUrl = in.readString();
+        season = in.readString();
+        geo_location = in.readString();
     }
 
     public static List<Tick> initializeData() {
@@ -179,11 +195,29 @@ public class Tick implements Parcelable, Entity {
     }
 
     public String getDescription() {
+//        Log.i("Test", description.toString());
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getSeason() {
+//        Log.i("Test2", season.toString());
+        return season;
+    }
+
+    public void setSeason(String season) {
+        this.season = season;
+    }
+
+    public String getGeoLocation(){
+        return geo_location;
+    }
+
+    public void setGeoLocation(String geo_location){
+        this.geo_location = geo_location;
     }
 
     public String getImageUrl() {
@@ -197,8 +231,9 @@ public class Tick implements Parcelable, Entity {
     @Override
     public String toString() {
         return id + " : " + tickName + " : " + scientific_name + " : " + species + " : " + known_for + " : " + found_near_habitat
-                + " : " + description + " : " + imageUrl + " : " + created_at + " : " + updated_at;
+                + " : " + description + " : " + imageUrl + " : " + season + " : " + geo_location + ":" + created_at + " : " + updated_at;
     }
+
 
     @Override
     public int describeContents() {
@@ -223,6 +258,17 @@ public class Tick implements Parcelable, Entity {
         parcel.writeString(description);
         parcel.writeString(found_near_habitat);
         parcel.writeString(imageUrl);
+        parcel.writeString(season);
+        parcel.writeString(geo_location);
+
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Tick){
+            return ((Tick) obj).getId().equals(this.getId());
+        }
+        return super.equals(obj);
     }
 
     @Override

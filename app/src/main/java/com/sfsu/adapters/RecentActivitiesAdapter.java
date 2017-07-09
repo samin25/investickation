@@ -25,7 +25,7 @@ public class RecentActivitiesAdapter extends ArrayAdapter<Activities> {
     public RecentActivitiesAdapter(Context context, List<Activities> objects) {
         super(context, 0, objects);
         this.mActivitiesList = objects;
-        this.mContext = mContext;
+        this.mContext = context;
     }
 
 

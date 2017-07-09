@@ -1,0 +1,525 @@
+diff --git a/app/src/main/java/com/sfsu/entities/Activities.java b/app/src/main/java/com/sfsu/entities/Activities.java
+index 1726797..27fa1b7 100644
+--- a/app/src/main/java/com/sfsu/entities/Activities.java
++++ b/app/src/main/java/com/sfsu/entities/Activities.java
+@@ -2,9 +2,12 @@ package com.sfsu.entities;
+ 
+ import android.os.Parcel;
+ import android.os.Parcelable;
++import android.support.annotation.NonNull;
+ 
+ import com.google.gson.annotations.SerializedName;
+ 
++import java.util.Comparator;
++
+ 
+ /**
+  * <p>
+@@ -21,7 +24,7 @@ import com.google.gson.annotations.SerializedName;
+  * </p>
+  * Created by Pavitra on 5/19/2015.
+  */
+-public class Activities implements Entity, Parcelable {
++public class Activities implements Entity, Parcelable,Comparable<Activities> {
+ 
+     public final static transient int ID_LENGTH = 23;
+     public static final Creator<Activities> CREATOR = new Creator<Activities>() {
+@@ -35,6 +38,9 @@ public class Activities implements Entity, Parcelable {
+             return new Activities[size];
+         }
+     };
++
++
++
+     private String id;
+     @SerializedName("name")
+     private String activityName;
+@@ -57,7 +63,7 @@ public class Activities implements Entity, Parcelable {
+      * Constructor overloading for creating the Activities Model and sending the object to ActivityRunningFragment fragment.
+      *
+      * @param name
+-     * @param num_people
++     * @param num_of_people
+      * @param num_pets
+      * @param timestamp
+      */
+@@ -80,7 +86,7 @@ public class Activities implements Entity, Parcelable {
+      * @param image_url
+      * @param distance
+      * @param timestamp
+-     * @param created_at
++     * @param
+      * @param updated_at
+      */
+     public Activities(String name, String location_area, int num_of_people, int num_pets, String image_url, int distance, long
+@@ -100,9 +106,9 @@ public class Activities implements Entity, Parcelable {
+      * Constructor for DEMO purpose.
+      *
+      * @param name
+-     * @param num_people
++     * @param num_of_people
+      * @param num_pets
+-     * @param num_ticks
++     * @param
+      */
+     public Activities(String name, int num_of_people, int num_pets) {
+         this.activityName = name;
+@@ -199,7 +205,7 @@ public class Activities implements Entity, Parcelable {
+     /**
+      * Returns the state of the this Activity
+      *
+-     * @param state
++     * @param
+      */
+     public STATE getState() {
+         return activityState;
+@@ -283,6 +289,16 @@ public class Activities implements Entity, Parcelable {
+         dest.writeString(image_url);
+     }
+ 
++
++    @Override
++    public int compareTo(@NonNull Activities activities) {
++        if (activities.getTimestamp()>this.timestamp)
++            return -1;
++        else
++            return 1;
++
++    }
++
+     /**
+      * A list of constant values assigned to Activities. Started represents the
+      */
+diff --git a/app/src/main/java/com/sfsu/investickation/TickGuideMasterActivity.java b/app/src/main/java/com/sfsu/investickation/TickGuideMasterActivity.java
+index 301b564..6923373 100644
+--- a/app/src/main/java/com/sfsu/investickation/TickGuideMasterActivity.java
++++ b/app/src/main/java/com/sfsu/investickation/TickGuideMasterActivity.java
+@@ -104,8 +104,8 @@ public class TickGuideMasterActivity extends AppCompatActivity implements
+     @Override
+     protected void onSaveInstanceState(Bundle outState) {
+         super.onSaveInstanceState(outState);
+-        mFragmentManager.putFragment(outState, "tickGuideDetail", tickGuideDetailFragment);
+-        mFragmentManager.putFragment(outState, "tickGuideList", tickGuideListFragment);
++        if(tickGuideDetailFragment != null) mFragmentManager.putFragment(outState, "tickGuideDetail", tickGuideDetailFragment);
++        if(tickGuideListFragment != null) mFragmentManager.putFragment(outState, "tickGuideList", tickGuideListFragment);
+         if(tickMapFragment != null) mFragmentManager.putFragment(outState, "tickMap", tickMapFragment);
+     }
+ }
+diff --git a/app/src/main/java/com/sfsu/investickation/UserActivityMasterActivity.java b/app/src/main/java/com/sfsu/investickation/UserActivityMasterActivity.java
+index 5d2ae6c..b2e158c 100644
+--- a/app/src/main/java/com/sfsu/investickation/UserActivityMasterActivity.java
++++ b/app/src/main/java/com/sfsu/investickation/UserActivityMasterActivity.java
+@@ -208,7 +208,7 @@ public class UserActivityMasterActivity extends MainBaseActivity implements Acti
+     @Override
+     public void onPlayButtonClick(Bundle activityBundle) {
+ 
+-        if (activityBundle != null) {
++//        if (activityBundle != null) {
+             // passes the Newly created object to the ActivityRunningFragment fragment.
+             activityRunningFragment = ActivityRunningFragment.newInstance(activityBundle);
+             FragmentTransaction transaction = fragmentManager.beginTransaction();
+@@ -216,7 +216,7 @@ public class UserActivityMasterActivity extends MainBaseActivity implements Acti
+             // dont add to backstack
+             transaction.replace(R.id.activity_fragment_container, activityRunningFragment);
+             transaction.commit();
+-        }
++//        }
+     }
+ 
+     @Override
+@@ -272,9 +272,17 @@ public class UserActivityMasterActivity extends MainBaseActivity implements Acti
+     @Override
+     protected void onSaveInstanceState(Bundle outState) {
+         super.onSaveInstanceState(outState);
+-        fragmentManager.putFragment(outState, "activityRunning", activityRunningFragment);
+-        fragmentManager.putFragment(outState, "activityDetail", activityDetailFragment);
+-        fragmentManager.putFragment(outState, "activityNew", activityNewFragment);
+-        fragmentManager.putFragment(outState, "activityList", activityListFragment);
++        if(activityRunningFragment!=null) {
++            fragmentManager.putFragment(outState, "activityRunning", activityRunningFragment);
++        }
++        if(activityDetailFragment!=null) {
++            fragmentManager.putFragment(outState, "activityDetail", activityDetailFragment);
++        }
++        if(activityNewFragment!=null) {
++            fragmentManager.putFragment(outState, "activityNew", activityNewFragment);
++        }
++        if(activityListFragment!=null) {
++            fragmentManager.putFragment(outState, "activityList", activityListFragment);
++        }
+     }
+ }
+diff --git a/app/src/main/java/com/sfsu/investickation/fragments/ActivityListFragment.java b/app/src/main/java/com/sfsu/investickation/fragments/ActivityListFragment.java
+index 418cda7..447c998 100644
+--- a/app/src/main/java/com/sfsu/investickation/fragments/ActivityListFragment.java
++++ b/app/src/main/java/com/sfsu/investickation/fragments/ActivityListFragment.java
+@@ -212,14 +212,16 @@ public class ActivityListFragment extends Fragment implements SearchView.OnQuery
+         } else {
+             if (mSwipeRefreshLayout.isRefreshing())
+                 mSwipeRefreshLayout.setRefreshing(false);
+-            // get List of Activities from Database
+-            mLocalActivitiesList = (List<Activities>) dbController.getAll();
+             // important to clear all the Activities before assigning it to new list
+             if (mActivitiesList != null) {
+                 mActivitiesList.clear();
+             }
++            // get List of Activities from Database
++            mLocalActivitiesList = (List<Activities>) dbController.getAll();
+             // assign the locally received Activities from local data storage
+             mActivitiesList = mLocalActivitiesList;
++            if(mResponseActivitiesList!=null && mResponseActivitiesList.size()>0)
++                mActivitiesList.addAll(mResponseActivitiesList);
+ 
+             if (mActivitiesList.size() > 0 && mActivitiesList != null) {
+                 displayActivityList();
+@@ -323,7 +325,10 @@ public class ActivityListFragment extends Fragment implements SearchView.OnQuery
+         activitiesListAdapter.notifyDataSetChanged();
+         if (recyclerView_activity != null) {
+ 
+-            recyclerView_activity.setAdapter(activitiesListAdapter);
++            if(recyclerView_activity.getAdapter()!=null)
++                recyclerView_activity.swapAdapter(activitiesListAdapter,true);
++            else
++                recyclerView_activity.setAdapter(activitiesListAdapter);
+ 
+             // touch listener when the user clicks on the Activity in the List.
+             recyclerView_activity.addOnItemTouchListener(new RecyclerItemClickListener(mContext, recyclerView_activity,
+@@ -353,6 +358,9 @@ public class ActivityListFragment extends Fragment implements SearchView.OnQuery
+                 }
+             });
+ 
++            //show the list view again
++            txtView_activityListInfo.setVisibility(View.GONE);
++            recyclerView_activity.setVisibility(View.VISIBLE);
+             // finally apply the animation
+             fab_addActivity.startAnimation(animation);
+ 
+@@ -429,7 +437,7 @@ public class ActivityListFragment extends Fragment implements SearchView.OnQuery
+     /**
+      * Helper method to filter the List of Activities on search text change in this Fragment.
+      *
+-     * @param serverActivitiesList
++     * @param activitiesList
+      * @param query
+      * @return
+      */
+diff --git a/app/src/main/java/com/sfsu/investickation/fragments/ActivityNewFragment.java b/app/src/main/java/com/sfsu/investickation/fragments/ActivityNewFragment.java
+index 45118db..a96222c 100644
+--- a/app/src/main/java/com/sfsu/investickation/fragments/ActivityNewFragment.java
++++ b/app/src/main/java/com/sfsu/investickation/fragments/ActivityNewFragment.java
+@@ -4,6 +4,7 @@ package com.sfsu.investickation.fragments;
+ import android.app.Activity;
+ import android.app.ProgressDialog;
+ import android.content.Context;
++import android.content.SharedPreferences;
+ import android.location.Location;
+ import android.os.Bundle;
+ import android.support.v4.app.Fragment;
+@@ -22,6 +23,7 @@ import com.google.android.gms.maps.GoogleMap;
+ import com.google.android.gms.maps.MapView;
+ import com.google.android.gms.maps.SupportMapFragment;
+ import com.google.android.gms.maps.model.LatLng;
++import com.google.gson.Gson;
+ import com.sfsu.controllers.DatabaseDataController;
+ import com.sfsu.controllers.GoogleMapController;
+ import com.sfsu.controllers.LocationController;
+@@ -122,6 +124,15 @@ public class ActivityNewFragment extends Fragment implements
+         final Bundle mapViewSavedInstanceState = savedInstanceState != null ? savedInstanceState.getBundle("mapViewSaveState") : null;
+         mapView.onCreate(mapViewSavedInstanceState);
+ 
++//        SharedPreferences activityPref = mContext.getSharedPreferences(UserActivityMasterActivity.PREF_ACTIVITY_DATA, Context.MODE_PRIVATE);
++//        String activityJson = activityPref.getString(UserActivityMasterActivity.EDITOR_ONGOING_ACTIVITY, null);
++//        if(activityJson!=null) {
++//            Activities ongoingActivityObj = (new Gson()).fromJson(activityJson, Activities.class);
++//            if (ongoingActivityObj != null) {
++//                mInterface.onPlayButtonClick(null);
++//            }
++//        }
++
+         return rootView;
+     }
+ 
+diff --git a/app/src/main/java/com/sfsu/investickation/fragments/ActivityRunningFragment.java b/app/src/main/java/com/sfsu/investickation/fragments/ActivityRunningFragment.java
+index 0f90272..7d3cf9d 100644
+--- a/app/src/main/java/com/sfsu/investickation/fragments/ActivityRunningFragment.java
++++ b/app/src/main/java/com/sfsu/investickation/fragments/ActivityRunningFragment.java
+@@ -91,9 +91,12 @@ public class ActivityRunningFragment extends Fragment implements LocationControl
+     // Map
+     @Bind(R.id.mapview_activity_running)
+     MapView mapView;
++//    // CardView
++//    @Bind(R.id.cardview_activity_running_add_observation)
++//    CardView btn_addObservation;
+     // CardView
+-    @Bind(R.id.cardview_activity_running_add_observation)
+-    CardView btn_addObservation;
++    @Bind(R.id.fab_act_run_activity_add_observation)
++    FloatingActionButton btn_addObservation;
+     // TextView
+     @Bind(R.id.textview_activity_name)
+     TextView txtView_activityName;
+@@ -501,7 +504,8 @@ public class ActivityRunningFragment extends Fragment implements LocationControl
+     @Override
+     public void onClick(View v) {
+         switch (v.getId()) {
+-            case R.id.cardview_activity_running_add_observation:
++            case R.id.fab_act_run_activity_add_observation:
++//            case R.id.cardview_activity_running_add_observation:
+                 mListener.onAddNewObservationClicked(ongoingActivityObj.getId());
+                 break;
+ 
+@@ -637,6 +641,9 @@ public class ActivityRunningFragment extends Fragment implements LocationControl
+      */
+     private void clearResources() {
+         // delete the SharedPref data
++        SharedPreferences activityOngoingPref = mContext.getSharedPreferences(UserActivityMasterActivity.PREF_ACTIVITY_DATA, Context.MODE_PRIVATE);
++        activityOngoingPref.edit().putString(UserActivityMasterActivity.EDITOR_ONGOING_ACTIVITY, null).apply();
++
+         activityPref.edit().remove(UserActivityMasterActivity.PREF_ACTIVITY_DATA).apply();
+         // stop timer is the flag is set
+         // stop the Service
+diff --git a/app/src/main/java/com/sfsu/map/StaticMap.java b/app/src/main/java/com/sfsu/map/StaticMap.java
+index ca4ae9d..e8b6e03 100644
+--- a/app/src/main/java/com/sfsu/map/StaticMap.java
++++ b/app/src/main/java/com/sfsu/map/StaticMap.java
+@@ -117,6 +117,7 @@ public class StaticMap {
+                 } else if (counter > 0) {
+                     pathBuilder.append(PIPE).append(mlatLngs[i].latitude).append(COMMA).append(mlatLngs[i].longitude);
+                 }
++                counter++;
+             }
+             return this;
+         }
+diff --git a/app/src/main/java/com/sfsu/network/handler/ApiRequestHandler.java b/app/src/main/java/com/sfsu/network/handler/ApiRequestHandler.java
+index 8d060d6..cd9dbc7 100644
+--- a/app/src/main/java/com/sfsu/network/handler/ApiRequestHandler.java
++++ b/app/src/main/java/com/sfsu/network/handler/ApiRequestHandler.java
+@@ -1,6 +1,7 @@
+ package com.sfsu.network.handler;
+ 
+ import android.content.Context;
++import android.util.Log;
+ 
+ import com.google.gson.Gson;
+ import com.sfsu.network.auth.AuthPreferences;
+@@ -59,6 +60,7 @@ public class ApiRequestHandler {
+         this.mContext = mContext;
+         mAuthPreferences = new AuthPreferences(mContext);
+         ACCESS_TOKEN = mAuthPreferences.getAccessToken();
++        Log.e("@@GTOKEN HERE: ###>>>>>",ACCESS_TOKEN);
+         USER_ID = mAuthPreferences.getUser_id();
+     }
+ 
+diff --git a/app/src/main/res/layout/fragment_activity_running.xml b/app/src/main/res/layout/fragment_activity_running.xml
+index 0571aaf..223081d 100644
+--- a/app/src/main/res/layout/fragment_activity_running.xml
++++ b/app/src/main/res/layout/fragment_activity_running.xml
+@@ -1,11 +1,11 @@
+ <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+-                xmlns:fab="http://schemas.android.com/apk/res-auto"
+-                xmlns:tools="http://schemas.android.com/tools"
+-                android:layout_width="match_parent"
+-                android:layout_height="match_parent"
+-                android:background="@color/colorWhite"
+-                android:orientation="vertical"
+-                tools:context=".UserActivityMasterActivity">
++    xmlns:fab="http://schemas.android.com/apk/res-auto"
++    xmlns:tools="http://schemas.android.com/tools"
++    android:layout_width="match_parent"
++    android:layout_height="match_parent"
++    android:background="@color/colorWhite"
++    android:orientation="vertical"
++    tools:context=".UserActivityMasterActivity">
+ 
+ 
+     <!-- Required: Layout to hold MapView-->
+@@ -19,7 +19,7 @@
+             android:id="@+id/mapview_activity_running"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+-            android:enabled="true"/>
++            android:enabled="true" />
+ 
+     </LinearLayout>
+ 
+@@ -34,7 +34,7 @@
+         android:layout_marginEnd="@dimen/view_dimen_large"
+         fab:fab_colorNormal="@color/colorPrimary"
+         fab:fab_colorPressed="@color/colorPrimaryDark"
+-        fab:fab_icon="@mipmap/ic_notifications_white_24dp"/>
++        fab:fab_icon="@mipmap/ic_notifications_white_24dp" />
+ 
+ 
+     <TextView
+@@ -47,7 +47,7 @@
+         android:text="@string/activityRunning_activityInfo"
+         android:textAlignment="center"
+         android:textColor="@color/primaryText"
+-        android:textSize="@dimen/font_small"/>
++        android:textSize="@dimen/font_small" />
+ 
+     <TextView
+         android:id="@+id/textview_activity_name"
+@@ -59,7 +59,7 @@
+         android:text="Hiking @ Golden Gate bridge"
+         android:textAlignment="center"
+         android:textColor="@color/colorPrimary"
+-        android:textSize="@dimen/font_large"/>
++        android:textSize="@dimen/font_large" />
+ 
+     <TextView
+         android:id="@+id/textview_act_runing_status"
+@@ -76,7 +76,7 @@
+         android:text="@string/activity_running_status_active"
+         android:textAlignment="center"
+         android:textColor="@color/colorWhite"
+-        android:textSize="@dimen/font_small"/>
++        android:textSize="@dimen/font_small" />
+ 
+ 
+     <!--Line separator-->
+@@ -86,57 +86,103 @@
+         android:layout_height="@dimen/separator_dimen"
+         android:layout_below="@id/textview_act_runing_status"
+         android:layout_marginTop="@dimen/view_dimen_small"
+-        android:background="@color/divider"/>
++        android:background="@color/divider" />
+ 
+-    <android.support.v7.widget.CardView
+-        android:id="@+id/cardview_activity_running_add_observation"
+-        android:layout_width="wrap_content"
++    <LinearLayout
++        android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+-        android:layout_below="@id/view_divider"
+-        android:layout_centerInParent="true"
+-        android:layout_marginTop="@dimen/view_dimen_medium"
+-        android:elevation="@dimen/cardview_elevation"
+-        android:padding="@dimen/view_dimen_large">
++        android:layout_alignParentBottom="true"
++        android:layout_alignParentLeft="true"
++        android:layout_alignParentStart="true"
++        android:layout_marginBottom="@dimen/view_dimen_large"
++        android:orientation="horizontal">
+ 
+-        <RelativeLayout
+-            android:layout_width="wrap_content"
++        <LinearLayout
++            android:layout_width="0dp"
+             android:layout_height="wrap_content"
+-            android:background="@color/colorPrimary"
+-            android:paddingBottom="@dimen/view_dimen_small"
+-            android:paddingLeft="@dimen/view_dimen_large"
+-            android:paddingRight="@dimen/view_dimen_large"
+-            android:paddingTop="@dimen/view_dimen_small">
++            android:layout_weight="1"
++            android:gravity="center"
++            android:orientation="vertical">
+ 
+             <TextView
++                android:id="@+id/textview_static_act_run_stop_activity"
++                android:layout_width="match_parent"
++                android:layout_height="wrap_content"
++                android:gravity="center"
++                android:layout_marginBottom="@dimen/view_dimen_small"
++                android:text="@string/text_stop_activity"
++                android:textColor="@color/secondaryText"
++                android:textSize="@dimen/font_X_small" />
++
++            <com.getbase.floatingactionbutton.FloatingActionButton
++                android:id="@+id/fab_act_run_activity_stop"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+-                android:layout_centerInParent="true"
++                fab:fab_colorNormal="@color/colorPrimary"
++                fab:fab_colorPressed="@color/colorPrimaryDark"
++                fab:fab_icon="@mipmap/ic_stop_white_24dp" />
++
++        </LinearLayout>
++
++        <LinearLayout
++            android:layout_width="0dp"
++            android:layout_height="wrap_content"
++            android:layout_weight="1"
++            android:gravity="center"
++            android:orientation="vertical">
++
++            <TextView
++                android:layout_width="match_parent"
++                android:gravity="center"
++                android:layout_height="wrap_content"
++                android:layout_marginBottom="@dimen/view_dimen_small"
+                 android:text="@string/button_addObservation"
+-                android:textColor="@color/colorWhite"
+-                android:textSize="@dimen/font_small"/>
+-        </RelativeLayout>
+-    </android.support.v7.widget.CardView>
++                android:textColor="@color/secondaryText"
++                android:textSize="@dimen/font_X_small" />
+ 
+-    <com.getbase.floatingactionbutton.FloatingActionButton
+-        android:id="@+id/fab_act_run_activity_stop"
+-        android:layout_width="wrap_content"
+-        android:layout_height="wrap_content"
+-        android:layout_alignParentBottom="true"
+-        android:layout_centerHorizontal="true"
+-        android:layout_marginBottom="@dimen/view_dimen_large"
+-        fab:fab_colorNormal="@color/colorPrimary"
+-        fab:fab_colorPressed="@color/colorPrimaryDark"
+-        fab:fab_icon="@mipmap/ic_stop_white_24dp"/>
++            <com.getbase.floatingactionbutton.FloatingActionButton
++                android:id="@+id/fab_act_run_activity_add_observation"
++                android:layout_width="wrap_content"
++                android:layout_height="wrap_content"
++                fab:fab_colorNormal="@color/colorPrimary"
++                fab:fab_colorPressed="@color/colorPrimaryDark"
++                fab:fab_icon="@mipmap/ic_add_white_36dp" />
++
++        </LinearLayout>
++
++<!--
++        <android.support.v7.widget.CardView
++            android:id="@+id/cardview_activity_running_add_observation"
++            android:layout_width="0dp"
++            android:layout_height="wrap_content"
++            android:layout_marginBottom="20dp"
++            android:layout_marginRight="@dimen/view_dimen_large"
++            android:layout_weight="1"
++            android:elevation="@dimen/cardview_elevation"
++            android:padding="@dimen/view_dimen_large">
++
++            <RelativeLayout
++                android:layout_width="wrap_content"
++                android:layout_height="wrap_content"
++                android:background="@color/colorPrimary"
++                android:paddingBottom="@dimen/view_dimen_small"
++                android:paddingLeft="@dimen/view_dimen_large"
++                android:paddingRight="@dimen/view_dimen_large"
++                android:paddingTop="@dimen/view_dimen_small">
++
++                <TextView
++                    android:layout_width="wrap_content"
++                    android:layout_height="wrap_content"
++                    android:layout_centerInParent="true"
++                    android:text="@string/button_addObservation"
++                    android:textColor="@color/colorWhite"
++                    android:textSize="@dimen/font_small" />
++            </RelativeLayout>
++        </android.support.v7.widget.CardView>
++-->
++
++
++    </LinearLayout>
+ 
+-    <TextView
+-        android:id="@+id/textview_static_act_run_stop_activity"
+-        android:layout_width="wrap_content"
+-        android:layout_height="wrap_content"
+-        android:layout_above="@id/fab_act_run_activity_stop"
+-        android:layout_centerInParent="true"
+-        android:layout_marginBottom="@dimen/view_dimen_small"
+-        android:text="@string/text_stop_activity"
+-        android:textColor="@color/secondaryText"
+-        android:textSize="@dimen/font_X_small"/>
+ 
+ </RelativeLayout>

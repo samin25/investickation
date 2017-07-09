@@ -208,7 +208,7 @@ public class UserActivityMasterActivity extends MainBaseActivity implements Acti
     @Override
     public void onPlayButtonClick(Bundle activityBundle) {
 
-        if (activityBundle != null) {
+//        if (activityBundle != null) {
             // passes the Newly created object to the ActivityRunningFragment fragment.
             activityRunningFragment = ActivityRunningFragment.newInstance(activityBundle);
             FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -216,7 +216,7 @@ public class UserActivityMasterActivity extends MainBaseActivity implements Acti
             // dont add to backstack
             transaction.replace(R.id.activity_fragment_container, activityRunningFragment);
             transaction.commit();
-        }
+//        }
     }
 
     @Override
@@ -272,9 +272,17 @@ public class UserActivityMasterActivity extends MainBaseActivity implements Acti
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        fragmentManager.putFragment(outState, "activityRunning", activityRunningFragment);
-        fragmentManager.putFragment(outState, "activityDetail", activityDetailFragment);
-        fragmentManager.putFragment(outState, "activityNew", activityNewFragment);
-        fragmentManager.putFragment(outState, "activityList", activityListFragment);
+        if(activityRunningFragment!=null) {
+            fragmentManager.putFragment(outState, "activityRunning", activityRunningFragment);
+        }
+        if(activityDetailFragment!=null) {
+            fragmentManager.putFragment(outState, "activityDetail", activityDetailFragment);
+        }
+        if(activityNewFragment!=null) {
+            fragmentManager.putFragment(outState, "activityNew", activityNewFragment);
+        }
+        if(activityListFragment!=null) {
+            fragmentManager.putFragment(outState, "activityList", activityListFragment);
+        }
     }
 }

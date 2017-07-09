@@ -12,6 +12,8 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -27,6 +29,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -53,6 +56,7 @@ import com.sfsu.investickation.UserActivityMasterActivity;
 import com.sfsu.network.auth.AuthPreferences;
 import com.sfsu.network.bus.BusProvider;
 import com.sfsu.network.events.FileUploadEvent;
+import com.sfsu.network.events.LocationEvent;
 import com.sfsu.network.events.ObservationEvent;
 import com.sfsu.network.events.TickEvent;
 import com.sfsu.network.handler.ApiRequestHandler;
@@ -69,6 +73,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -179,6 +184,7 @@ public class AddObservationFragment extends Fragment implements LocationControll
         //et_description.addTextChangedListener(new TextValidator(mContext, AddObservationFragment.this, et_tickSpecies));
         et_numOfTicks.addTextChangedListener(new TextValidator(mContext, AddObservationFragment.this, et_numOfTicks));
         // initialize the Floating button.
+
         final FloatingActionButton addTickImage = (FloatingActionButton) rootView.findViewById(R.id.fab_add_tick_image);
 
         addTickImage.setOnClickListener(this);
@@ -203,6 +209,7 @@ public class AddObservationFragment extends Fragment implements LocationControll
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.button_post_observation:
+                Log.i(this.getClass().getSimpleName(), "Doing post observations");
                 postObservation();
                 break;
             case R.id.fab_add_tick_image:
@@ -215,9 +222,9 @@ public class AddObservationFragment extends Fragment implements LocationControll
      * Handles the custom image dialog to either prompt user for permission or to display custom dialog for choosing image
      */
     private void handleImageDialog() {
-        boolean isCameraApproved = mPermissionUtils.isCameraPermissionApproved();
-        boolean isWriteStorageApproved = mPermissionUtils.isWritePermissionApproved();
-        boolean isReadStorageApproved = mPermissionUtils.isReadPermissionApproved();
+        boolean isCameraApproved = mPermissionUtils.isCameraPermissionApproved(getContext());
+        boolean isWriteStorageApproved = mPermissionUtils.isWritePermissionApproved(getContext());
+        boolean isReadStorageApproved = mPermissionUtils.isReadPermissionApproved(getContext());
 
         if (isCameraApproved && isWriteStorageApproved && isReadStorageApproved) {
             openDialogForChoosingImage();
@@ -226,6 +233,38 @@ public class AddObservationFragment extends Fragment implements LocationControll
             askForPermission();
         }
     }
+
+    // new function added for getting Address form lat long
+    public String getGeoLocationAddressFromLatLong(double lat, double lng){
+        Geocoder geocoder= new Geocoder(this.getActivity(), Locale.getDefault());
+        List<Address> addresses;
+        StringBuilder strAddress = new StringBuilder();
+        try {
+            addresses = geocoder.getFromLocation(lat, lng, 1);
+            // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+            // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+            if (addresses.size()>0) {
+
+
+                String address = addresses.get(0).getAddressLine(0) + "\n";
+                strAddress.append(address);
+                String city = addresses.get(0).getLocality() + ", ";
+                strAddress.append(city);
+                String state = addresses.get(0).getAdminArea() + ", ";
+                strAddress.append(state);
+                String postalCode = addresses.get(0).getPostalCode() + "\n";
+                strAddress.append(postalCode);
+                String country = addresses.get(0).getCountryName() + "\n";
+                strAddress.append(country);
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return strAddress.toString();
+    }
+
+
 
     /**
      * Helper method to post Observation on server or store in local storage
@@ -243,19 +282,30 @@ public class AddObservationFragment extends Fragment implements LocationControll
                         activityId, userId);
 
                 // set all the location values
-                geoLocation = geoLocation != null ? geoLocation : "";
-                latitude = latitude != 0 ? latitude : 0.0;
-                longitude = longitude != 0 ? longitude : 0.0;
+//                geoLocation = geoLocation != null ? geoLocation : "";
+
+                geoLocation = getGeoLocationAddressFromLatLong(latitude,longitude)+"|"+latitude+", "+longitude;
+
+
+                Log.i(this.getClass().getSimpleName(), Double.toString(latitude));
+//                latitude = latitude != 0.0 ? latitude : 0.0;
+//                longitude = longitude != 0.0 ? longitude : 0.0;
+
 
                 newObservationObj.setGeoLocation(geoLocation);
                 newObservationObj.setLatitude(latitude);
                 newObservationObj.setLongitude(longitude);
 
+                Log.i(this.getClass().getSimpleName(), Double.toString(newObservationObj.getLatitude()));
+                Log.i(this.getClass().getSimpleName(), Double.toString(newObservationObj.getLongitude()));
+
                 // depending on network connection, save the Observation in local storage or server
                 if (AppUtils.isConnectedOnline(mContext)) {
+                    Log.i(this.getClass().getSimpleName(), "Interwebs");
                     BusProvider.bus().post(new ObservationEvent.OnLoadingInitialized(newObservationObj, ApiRequestHandler.ADD));
                     displayProgressDialog(mContext.getString(R.string.progressDialog_posting_observation));
                 } else {
+                    Log.i(this.getClass().getSimpleName(), "Local");
                     // create Unique ID for the Running activity of length 32.
                     String observationUUID = RandomStringUtils.randomAlphanumeric(Observation.ID_LENGTH);
                     // set the remaining params.
@@ -368,6 +418,11 @@ public class AddObservationFragment extends Fragment implements LocationControll
             }
         } else {
             Log.i(TAG, "askForPermission: not working");
+            mPermissionUtils.setPermission(PermissionUtils.CAMERA);
+            mPermissionUtils.setPermission(PermissionUtils.READ);
+            mPermissionUtils.setPermission(PermissionUtils.WRITE);
+            openDialogForChoosingImage();
+
         }
     }
 
@@ -464,6 +519,9 @@ public class AddObservationFragment extends Fragment implements LocationControll
                     if (imgFile.exists())
                         Log.i(TAG, "temp solution");
 
+                    Log.i(this.getClass().getSimpleName(), "Doing start location updates");
+
+                    mLocationController.startLocationUpdates();
                 }
             } catch (Exception e) {
                 Log.i(TAG, "->G :" + e.getMessage());
@@ -495,7 +553,7 @@ public class AddObservationFragment extends Fragment implements LocationControll
         if (selectedImagePath != null) {
             setPic();
             mImageController.galleryAddPic(selectedImagePath);
-            selectedImagePath = null;
+//            selectedImagePath = null;
         } else {
             Log.i(TAG, "handleCameraPicture: selectedPath null");
         }
@@ -565,6 +623,7 @@ public class AddObservationFragment extends Fragment implements LocationControll
 
     @Override
     public void setLatLng(LatLng mLatLng) {
+        Log.i(this.getClass().getSimpleName(), "Doing set lat lng");
         this.latitude = mLatLng.latitude;
         this.longitude = mLatLng.longitude;
     }
@@ -620,8 +679,24 @@ public class AddObservationFragment extends Fragment implements LocationControll
     public void onObservationDataPostSuccess(ObservationEvent.OnLoaded onLoaded) {
         dismissProgressDialog();
         Observation observationResponse = onLoaded.getResponse();
+
         // create File from the path
-        File imageFile = new File(selectedImagePath);
+
+        File imageFile;
+//        File imageFile = new File(getActivity().getFilesDir(), "empty.png");
+//        if (selectedImagePath != null) {
+//            imageFile = new File(selectedImagePath, "empty.png");
+//        } else {
+//            imageFile = new File("");
+//            Log.i("Test", "selectedimage is null");
+//        }
+
+        imageFile = null;
+        if (selectedImagePath != null) {
+
+            imageFile = new File(selectedImagePath);
+        }
+
         // create RequestBody to send the image to server
         RequestBody requestBody = RequestBody.create(MediaType.parse("multipart/form-data"), imageFile);
         // create dynamic file name for the image
@@ -643,7 +718,7 @@ public class AddObservationFragment extends Fragment implements LocationControll
     @Subscribe
     public void onObservationDataPostFailure(ObservationEvent.OnLoadingError onLoadingError) {
         dismissProgressDialog();
-        Toast.makeText(mContext, onLoadingError.getErrorMessage(), Toast.LENGTH_LONG).show();
+        Toast.makeText(mContext, "PostFailure"+onLoadingError.getErrorMessage(), Toast.LENGTH_LONG).show();
     }
 
 
@@ -667,6 +742,17 @@ public class AddObservationFragment extends Fragment implements LocationControll
         Toast.makeText(mContext, onLoadingError.getErrorMessage(), Toast.LENGTH_LONG).show();
     }
 
+// Sophia trying to create a api call for location
+//    @Subscribe
+//    public void onObservationPostLocation(LocationEvent.OnLoaded onLoaded) {
+//        dismissProgressDialog();
+//        Observation observationResponse = onLoaded.getResponse();
+//
+//        // show progress dialog
+//        displayProgressDialog(mContext.getString(R.string.progressDialog_posting_observation));
+//    }
+
+
 
     /**
      * Callback interface to handle the onClick Listeners in {@link AddObservationFragment} Fragment.
@@ -675,7 +761,7 @@ public class AddObservationFragment extends Fragment implements LocationControll
         /**
          * Callback method to open {@link ObservationListFragment} after {@link Observation} is posted on server or SQLite DB.
          *
-         * @param newObservation
+         * @param
          */
         void postObservationData(long statusFlag);
     }

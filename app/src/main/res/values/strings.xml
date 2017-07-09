@@ -63,9 +63,7 @@
     <string name="textSignUp">Sign Up</string>
     <!--privacy agreement-->
     <string name="title_privacy_agreement">InvesTICKations Privacy Agreement</string>
-    <string name="privacyAgreement"><![CDATA[Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtedly source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of &#8220; de Finibus Bonorum et Malorum &#8221; (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, &#8220;Lorem ipsum dolor sit amet..&#8221;, comes from a line in section 1.10.32.
-
-The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.]]></string>
+    <string name="privacyAgreement"><![CDATA[We respect your privacy. Your address will only be visible to the administrators of the project and we will not distribute it to anyone. When viewing your " account" page, you will see your own address, but it will not be visible to other users. We will show a dot on our on - line map that indicates the center of the zip code or postal code in which your observations were made and in this way we will assure that the exact location of your observations remains confidential. This Privacy Policy governs the manner in which InvesTICKations collects, uses, maintains and discloses information collected from users (each, a "User") of the investickations.com website ("Site"). This privacy policy applies to the Site and all products and services offered by InvesTICKations.]]></string>
 
 
     <!-- ProfileFragment-->
@@ -231,7 +229,7 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="actNew_totalPets">Total Pets</string>
     <string name="actNew_totalPeople">Total People</string>
     <string name="actNew_setReminder">Set Reminder</string>
-    <string name="actNew_defaultReminder">A reminder will be set for 30 mins. <br/>You can change reminder settings in
+    <string name="actNew_defaultReminder">A reminder will be set for 30 mins. <br />You can change reminder settings in
         ActivityRunning</string>
     <string name="hint_totalPeople"># of people</string>
     <string name="hint_totalPets"># of Pets</string>
@@ -239,16 +237,18 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     <string name="actNew_startActivityDisclaimer">Clicking play button will start an Activity</string>
 
     <!-- Tick adapter -->
-    <string name="tick_click_here_for_details">View details</string>
+    <string name="tick_click_here_for_details">View Details</string>
 
     <!-- Tick Details-->
     <string name="tickDetails_toolbar_title">Tick Details</string>
     <string name="basicInfo">Basic Information</string>
-    <string name="tick_species">Species:</string>
+    <string name="tick_species">Common Name:</string>
     <string name="tick_scientific_name">Scientific Name:</string>
-    <string name="tick_knownFor">Known For:</string>
+    <string name="tick_knownFor">Diseases:</string>
     <string name="tick_formalName">Formal Name:</string>
-    <string name="tick_location_habitat">Found Near:</string>
+    <string name="tick_location_habitat">Habitat:</string>
+    <string name="tick_season">Seasonality:</string>
+    <string name="tick_geo_location">Geo. Location:</string>
 
     <!-- Activity Map-->
     <string name="infoWindow_obsName">Observation Name</string>

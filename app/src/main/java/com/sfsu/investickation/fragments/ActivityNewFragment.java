@@ -4,9 +4,11 @@ package com.sfsu.investickation.fragments;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +23,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.Gson;
 import com.sfsu.controllers.DatabaseDataController;
 import com.sfsu.controllers.GoogleMapController;
 import com.sfsu.controllers.LocationController;
@@ -120,6 +123,23 @@ public class ActivityNewFragment extends Fragment implements
         // in times of changing the Orientation of Screen, we have to get the MapView from savedInstanceState
         final Bundle mapViewSavedInstanceState = savedInstanceState != null ? savedInstanceState.getBundle("mapViewSaveState") : null;
         mapView.onCreate(mapViewSavedInstanceState);
+
+
+        SharedPreferences activityPref = mContext.getSharedPreferences(UserActivityMasterActivity.PREF_ACTIVITY_DATA, Context.MODE_PRIVATE);
+        boolean activityRunning = activityPref.getBoolean("IS_ACTIVITY_RUNNING", false);
+        if(activityRunning) {
+            mInterface.onPlayButtonClick(null);
+        }
+
+
+//        SharedPreferences activityPref = mContext.getSharedPreferences(UserActivityMasterActivity.PREF_ACTIVITY_DATA, Context.MODE_PRIVATE);
+//        String activityJson = activityPref.getString(UserActivityMasterActivity.EDITOR_ONGOING_ACTIVITY, null);
+//        if(activityJson!=null) {
+//            Activities ongoingActivityObj = (new Gson()).fromJson(activityJson, Activities.class);
+//            if (ongoingActivityObj != null) {
+//                mInterface.onPlayButtonClick(null);
+//            }
+//        }
 
         return rootView;
     }

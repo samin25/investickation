@@ -1,5 +1,7 @@
 package com.sfsu.network.events;
 
+import android.util.Log;
+
 import com.sfsu.session.LoginResponse;
 
 /**

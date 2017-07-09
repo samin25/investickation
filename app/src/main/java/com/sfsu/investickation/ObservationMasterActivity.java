@@ -137,7 +137,7 @@ public class ObservationMasterActivity extends MainBaseActivity implements
         transaction.commit();
     }
 
-
+//TODO CRASHES
     @Override
     public void onBackPressed() {
         int count = fragmentManager.getBackStackEntryCount();
@@ -219,10 +219,24 @@ public class ObservationMasterActivity extends MainBaseActivity implements
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//        fragmentManager.putFragment(outState, "addObservation", mAddObservationFragment);
+//        fragmentManager.putFragment(outState, "editObservation", mEditObservationFragment);
+//        fragmentManager.putFragment(outState, "observationDetail", mObservationDetailFragment);
+//        fragmentManager.putFragment(outState, "observationList", mObservationListFragment);
+
         super.onSaveInstanceState(outState);
-        fragmentManager.putFragment(outState, "addObservation", mAddObservationFragment);
-        fragmentManager.putFragment(outState, "editObservation", mEditObservationFragment);
-        fragmentManager.putFragment(outState, "observationDetail", mObservationDetailFragment);
-        fragmentManager.putFragment(outState, "observationList", mObservationListFragment);
+        if (mEditObservationFragment != null) {
+            fragmentManager.putFragment(outState, "editObservation", mEditObservationFragment);
+        }
+        if (mAddObservationFragment!=null)
+            fragmentManager.putFragment(outState, "addObservation", mAddObservationFragment);
+        if (mObservationDetailFragment != null) {
+            fragmentManager.putFragment(outState, "observationDetail", mObservationDetailFragment);
+        }
+        if (mObservationListFragment != null) {
+            fragmentManager.putFragment(outState, "observationList", mObservationListFragment);
+        }
+
     }
 }

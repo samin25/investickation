@@ -133,7 +133,25 @@ public class ImageController {
 		/* Decode the JPEG file into a Bitmap */
         Bitmap bitmap = BitmapFactory.decodeFile(selectedImagePath, bmOptions);
 
-        return bitmap;
+        return scaleImage(bitmap);
+    }
+
+    private Bitmap scaleImage(Bitmap bitmap) {
+        int originalHeight = bitmap.getHeight();
+        int originalWidth = bitmap.getWidth();
+
+        double scaleFactor = 500.0/ (originalHeight + originalWidth);
+
+        if (scaleFactor < 1.0) {
+            int targetWidth = (int) Math.round(originalWidth * scaleFactor);
+            int targetHeight = (int) Math.round(originalHeight * scaleFactor);
+
+            Log.i("TEST", Integer.toString(targetHeight));
+            Log.i("TEST", Integer.toString(targetWidth));
+            return Bitmap.createScaledBitmap(bitmap, targetWidth, targetHeight, true);
+        } else {
+            return bitmap;
+        }
     }
 
     /**

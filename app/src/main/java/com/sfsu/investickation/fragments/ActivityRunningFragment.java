@@ -51,6 +51,7 @@ import com.sfsu.service.PeriodicAlarm;
 import com.sfsu.utils.AppUtils;
 import com.squareup.otto.Subscribe;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -90,9 +91,12 @@ public class ActivityRunningFragment extends Fragment implements LocationControl
     // Map
     @Bind(R.id.mapview_activity_running)
     MapView mapView;
+//    // CardView
+//    @Bind(R.id.cardview_activity_running_add_observation)
+//    CardView btn_addObservation;
     // CardView
-    @Bind(R.id.cardview_activity_running_add_observation)
-    CardView btn_addObservation;
+    @Bind(R.id.fab_act_run_activity_add_observation)
+    FloatingActionButton btn_addObservation;
     // TextView
     @Bind(R.id.textview_activity_name)
     TextView txtView_activityName;
@@ -115,6 +119,7 @@ public class ActivityRunningFragment extends Fragment implements LocationControl
     private AlertDialogMaster alertDialogMaster;
     private PeriodicAlarm mPeriodicAlarm;
     private ProgressDialog mProgressDialog;
+    private PowerManager.WakeLock wakelock;
     /**
      * BroadcastReceiver to receive the updates when Location is changed.
      */
@@ -161,8 +166,6 @@ public class ActivityRunningFragment extends Fragment implements LocationControl
     /**
      * Returns the instance of {@link ActivityRunningFragment} fragment with bundle.
      *
-     * @param key
-     * @param mActivity
      * @return
      */
     public static ActivityRunningFragment newInstance(Bundle activityBundle) {
@@ -401,7 +404,7 @@ public class ActivityRunningFragment extends Fragment implements LocationControl
                 mContext.registerReceiver(locationReceiver, new IntentFilter(LocationService.BROADCAST_ACTION));
 
             }
-
+            // TODO: create a timer
             // depending on whether the timer is set or not, display the corresponding icon.
             if (FLAG_IS_TIMER_SET) {
                 fab_reminder.setIcon(R.mipmap.ic_notifications_active_white_24dp);
@@ -426,6 +429,9 @@ public class ActivityRunningFragment extends Fragment implements LocationControl
     private void populateView() {
         ongoingActivityObj.setState(Activities.STATE.RUNNING);
         // when the newActivityObject is retrieved from the Intent, create a StringBuilder and set the text to TextView
+        SharedPreferences.Editor editor = mContext.getSharedPreferences(UserActivityMasterActivity.PREF_ACTIVITY_DATA, Context.MODE_PRIVATE).edit();
+        editor.putBoolean("IS_ACTIVITY_RUNNING",true);
+        editor.commit();
         StringBuilder textViewData = new StringBuilder();
         if (AppUtils.isConnectedOnline(mContext)) {
             if (!ongoingActivityObj.getLocation_area().equals("") && !ongoingActivityObj.getLocation_area().equals(null))
@@ -501,7 +507,8 @@ public class ActivityRunningFragment extends Fragment implements LocationControl
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.cardview_activity_running_add_observation:
+            case R.id.fab_act_run_activity_add_observation:
+//            case R.id.cardview_activity_running_add_observation:
                 mListener.onAddNewObservationClicked(ongoingActivityObj.getId());
                 break;
 
@@ -615,6 +622,9 @@ public class ActivityRunningFragment extends Fragment implements LocationControl
             mPeriodicAlarm.cancelAlarm();
         }
         mPeriodicAlarm.setAlarm(REMINDER_INTERVAL);
+//        PowerManager mgr = (PowerManager) getActivity().getSystemService(Context.POWER_SERVICE);
+//        wakelock = mgr.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MyWakeLock");
+//        wakelock.acquire();
     }
 
     /**
@@ -625,6 +635,7 @@ public class ActivityRunningFragment extends Fragment implements LocationControl
         FLAG_IS_TIMER_SET = false;
         mPeriodicAlarm.cancelAlarm();
         fab_reminder.setIcon(R.mipmap.ic_notifications_white_24dp);
+//        wakelock.release();
     }
 
 
@@ -633,6 +644,12 @@ public class ActivityRunningFragment extends Fragment implements LocationControl
      */
     private void clearResources() {
         // delete the SharedPref data
+        //below doesnt work
+//        SharedPreferences activityOngoingPref = mContext.getSharedPreferences(UserActivityMasterActivity.PREF_ACTIVITY_DATA, Context.MODE_PRIVATE);
+//        activityOngoingPref.edit().putString(UserActivityMasterActivity.EDITOR_ONGOING_ACTIVITY, null).apply();
+        SharedPreferences.Editor editor = mContext.getSharedPreferences(UserActivityMasterActivity.PREF_ACTIVITY_DATA, Context.MODE_PRIVATE).edit();
+        editor.putBoolean("IS_ACTIVITY_RUNNING",false);
+        editor.commit();
         activityPref.edit().remove(UserActivityMasterActivity.PREF_ACTIVITY_DATA).apply();
         // stop timer is the flag is set
         // stop the Service
@@ -643,7 +660,9 @@ public class ActivityRunningFragment extends Fragment implements LocationControl
         mPeriodicAlarm.cancelAlarm();
 
         FLAG_RUNNING = false;
-
+//
+//        wakelock.release();
+//        wakelock = null;
         if (!FLAG_IS_TIMER_SET)
             mPeriodicAlarm.cancelAlarm();
     }
@@ -673,6 +692,7 @@ public class ActivityRunningFragment extends Fragment implements LocationControl
                 mLatLngArray = mLatLngSet.toArray(new LatLng[mLatLngSet.size()]);
             }
 
+            ongoingActivityObj.setUpdated_at(AppUtils.getCurrentTimeStamp());
             // build the imageUrl
             String imageUrl = new StaticMap
                     .UrlBuilder()
@@ -684,6 +704,8 @@ public class ActivityRunningFragment extends Fragment implements LocationControl
 
             // set image_url and update the Activity.
             ongoingActivityObj.setImage_url(imageUrl);
+//            ongoingActivityObj.setLocation_area("SAN FRAN");
+
 
             // depending on whether the Network is available or not, perform onClick operation
             if (AppUtils.isConnectedOnline(mContext)) {
@@ -734,7 +756,6 @@ public class ActivityRunningFragment extends Fragment implements LocationControl
          * <p>The state of {@link Activities} is changed from <tt>RUNNING</tt> to <tt>CREATED</tt> and as a result the the
          * LocationController is stopped</p>
          *
-         * @param currentActivityObj Current Ongoing Activity Object passed from the ActivityNewFragment
          */
         public void onActivityStopButtonClicked();
 

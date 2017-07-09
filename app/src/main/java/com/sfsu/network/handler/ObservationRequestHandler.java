@@ -89,11 +89,15 @@ public class ObservationRequestHandler extends ApiRequestHandler {
                 makeCRUCall(observationCall);
                 break;
             case GET_ALL:
+                Log.i("FuckAll", USER_ID);
                 listObservationCall = mApiService.getAll(USER_ID, orderFilter);
                 getAllObservationsCall(listObservationCall);
                 break;
             case ADD:
                 observationCall = mApiService.add(onLoadingInitialized.getRequest());
+                Log.i("Not Angry", onLoadingInitialized.getRequest().toString());
+                Log.i(this.getClass().getSimpleName(), Double.toString(onLoadingInitialized.getRequest().getLatitude()));
+                Log.i(this.getClass().getSimpleName(), Double.toString(onLoadingInitialized.getRequest().getLongitude()));
                 makeCRUCall(observationCall);
                 break;
             case UPDATE:
@@ -248,6 +252,7 @@ public class ObservationRequestHandler extends ApiRequestHandler {
             @Override
             public void onResponse(Call<Observation> call, Response<Observation> response) {
                 if (response.isSuccess()) {
+                    Log.i("Test", response.body().toString());
                     mBus.post(new ObservationEvent.OnLoaded(response.body()));
                 } else {
                     int statusCode = response.code();

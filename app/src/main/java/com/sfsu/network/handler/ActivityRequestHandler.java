@@ -287,6 +287,10 @@ public class ActivityRequestHandler extends ApiRequestHandler {
             @Override
             public void onResponse(Call<List<Activities>> call, Response<List<Activities>> response) {
                 if (response.isSuccess()) {
+                    if (mBus == null) {
+                        mBus = new Bus();
+                    }
+
                     mBus.post(new ActivityEvent.OnListLoaded(response.body()));
                 } else {
                     int statusCode = response.code();

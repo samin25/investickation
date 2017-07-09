@@ -58,7 +58,7 @@
                         android:layout_height="@dimen/widget_dimen"
                         android:layout_below="@+id/view_divider"
                         android:gravity="center"
-                        android:text="American Dog Tick"
+                        android:text="American Dogg Tick"
                         android:textAlignment="center"
                         android:textColor="@color/colorPrimary"
                         android:textSize="@dimen/font_large"/>
@@ -176,11 +176,11 @@
                         android:layout_below="@id/separator_observation_2"
                         android:layout_toEndOf="@id/textViewStatic_geoLocation"
                         android:ellipsize="end"
-                        android:maxLines="1"
+                        android:maxLines="2"
                         android:paddingBottom="0dp"
                         android:paddingTop="@dimen/view_dimen_small"
                         android:text="San Mateo Park"
-                        android:textAlignment="center"
+                        android:textAlignment="viewStart"
                         android:textColor="@color/primaryText"
                         android:textSize="@dimen/font_small"/>
 

@@ -55,6 +55,8 @@ public class FileUploadHandler extends ApiRequestHandler {
                 // finally make a call to ApiService
                 imageUploadCall = mApiService.uploadImage(requestBodyMap, onLoadingInitialized.observationId);
 
+                Log.i("Test", imageUploadCall.request().headers().toString());
+
                 imageUploadCall.enqueue(new Callback<Observation>() {
                     @Override
                     public void onResponse(Call<Observation> call, Response<Observation> response) {

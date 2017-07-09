@@ -90,17 +90,17 @@ public class ObservationListFragment extends Fragment implements View.OnClickLis
     private ObservationsListAdapter mObservationsListAdapter;
     private DatabaseDataController dbController;
 
+    private static final String KEY_LOCAL_OBSERVATIONS = "local_observations";
+    final Handler mDbAccessHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            localObservationList = msg.getData().getParcelableArrayList(KEY_LOCAL_OBSERVATIONS);
+        }
+    };
 
     // start a thread to get all the Observations stored locally and post it using Handler
     private final Thread dbAccessThread = new Thread(new Runnable() {
-        private static final String KEY_LOCAL_OBSERVATIONS = "local_observations";
-        final Handler mDbAccessHandler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                super.handleMessage(msg);
-                localObservationList = msg.getData().getParcelableArrayList(KEY_LOCAL_OBSERVATIONS);
-            }
-        };
 
         private void passLocalObservationsToHandler(ArrayList<Observation> localObservations) {
             Message msg = mDbAccessHandler.obtainMessage();
@@ -115,6 +115,7 @@ public class ObservationListFragment extends Fragment implements View.OnClickLis
             try {
                 List<Observation> localObservations = (List<Observation>) dbController.getAll();
                 passLocalObservationsToHandler(new ArrayList<Observation>(localObservations));
+                mDbAccessHandler.removeCallbacks(this);
             } catch (RuntimeException re) {
                 throw new RuntimeException();
             }
@@ -244,7 +245,7 @@ public class ObservationListFragment extends Fragment implements View.OnClickLis
      * Syncs the current Observations with server
      */
     private void syncObservationWithServerAsync() {
-
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
 
@@ -261,11 +262,14 @@ public class ObservationListFragment extends Fragment implements View.OnClickLis
             if (AppUtils.isConnectedOnline(mContext)) {
                 // if the user has clicked ViewObservations in ActivityDetailFragment fragment, then show only the Activity's Observations
                 // Observations specific to Activity
-                dbAccessThread.start();
+                Log.i(this.getClass().getSimpleName(), "In the interwebs");
+//                if(!dbAccessThread.isAlive()) dbAccessThread.start(); --- back flow fix
+                if (dbAccessThread.getState() == Thread.State.NEW) dbAccessThread.start();
                 // get all Observations from Network
                 BusProvider.bus().post(new ObservationEvent.OnLoadingInitialized("", activityId, ApiRequestHandler.ACT_OBSERVATIONS));
                 displayProgressDialog("Fetching Observations...");
             } else {
+                Log.i(this.getClass().getSimpleName(), "In the local");
                 // network not available.
                 // if the user has clicked ViewObservations in ActivityDetailFragment fragment, then show only the Activity's Observations
                 localObservationList = (List<Observation>) dbController.getAll(activityId);
@@ -276,12 +280,18 @@ public class ObservationListFragment extends Fragment implements View.OnClickLis
             // get all the observations
             if (AppUtils.isConnectedOnline(mContext)) {
                 // start a background thread to get all the Observations stored in the Local Database
-                dbAccessThread.start();
+
+                try {
+                    if (dbAccessThread.getState() == Thread.State.NEW) dbAccessThread.start();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
 
                 // get all the observations stored on the server in separate thread
                 BusProvider.bus().post(new ObservationEvent.OnLoadingInitialized("", ApiRequestHandler.GET_ALL));
                 displayProgressDialog("Fetching Observations...");
-            } else {
+            }else {
+                Log.i(this.getClass().getSimpleName(), "In the local2");
                 // get all the observations. When the User clicks MyObservations in Nav Drawer or from DashboardFragment
                 localObservationList = (List<Observation>) dbController.getAll();
             }
@@ -351,6 +361,7 @@ public class ObservationListFragment extends Fragment implements View.OnClickLis
     public void onPause() {
         super.onPause();
         BusProvider.bus().unregister(this);
+        dbController.closeConnection();
     }
 
     @Override
@@ -371,12 +382,12 @@ public class ObservationListFragment extends Fragment implements View.OnClickLis
         responseObservationList = onLoaded.getResponseList();
 
         for (int i = 0; i < responseObservationList.size(); i++) {
-            responseObservationList.get(i).setIsOnCloud(true);
+            responseObservationList.get(i).setIsOnCloud(true); //dl from interweb
         }
 
         // the  localObservationList is being retrieved from the SQLite storage in separate background thread.
         for (int i = 0; i < localObservationList.size(); i++) {
-            localObservationList.get(i).setIsOnCloud(false);
+            localObservationList.get(i).setIsOnCloud(false); //retrieved from local
         }
 
         // add all local Observations to Remote observations.
@@ -385,6 +396,8 @@ public class ObservationListFragment extends Fragment implements View.OnClickLis
         if (mObservationList != null) {
             mObservationList.clear();
         }
+
+        Log.i(this.getClass().getSimpleName(), "Size of local: "+Integer.toString(localObservationList.size()));
 
         // finally make a list of All Observations from local and server.
         mObservationList = responseObservationList;

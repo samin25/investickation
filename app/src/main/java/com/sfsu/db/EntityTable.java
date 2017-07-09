@@ -73,6 +73,8 @@ public class EntityTable {
         static final String COLUMN_FOUND_NEAR = "found_near_habitat";
         static final String COLUMN_DESCRIPTION = "description";
         static final String COLUMN_IMAGE = "image_url";
+        static final String COLUMN_SEASONALITY = "seasonality";
+        static final String COLUMN_GEO_LOCATION = "geo_location";
         static final String COLUMN_CREATED_AT = "created_at";
         static final String COLUMN_UPDATED_AT = "updated_at";
         private static final String TAG = "~!@#$TicksTable";
@@ -96,6 +98,8 @@ public class EntityTable {
                 sb.append(COLUMN_FOUND_NEAR + " text not null, ");
                 sb.append(COLUMN_DESCRIPTION + " text not null, ");
                 sb.append(COLUMN_IMAGE + " text not null, ");
+                sb.append(COLUMN_SEASONALITY + " text not null, ");
+                sb.append(COLUMN_GEO_LOCATION + " text not null, ");
                 sb.append(COLUMN_CREATED_AT + " long, ");
                 sb.append(COLUMN_UPDATED_AT + " long ); ");
 
@@ -125,6 +129,7 @@ public class EntityTable {
         static final String COLUMN_NUMOFTICKS = "num_of_ticks";
         static final String COLUMN_TIMESTAMP = "timestamp";
         static final String COLUMN_IMAGE_URL = "tick_image";
+//        static final String COLUMN_SEASONALITY = "season";
         static final String COLUMN_DESCRIPTION = "description";
         static final String COLUMN_LATITUDE = "latitude";
         static final String COLUMN_LONGITUDE = "longitude";
@@ -143,6 +148,7 @@ public class EntityTable {
                 sb.append(COLUMN_NUMOFTICKS + " integer not null, ");
                 sb.append(COLUMN_IMAGE_URL + " text not null, ");
                 sb.append(COLUMN_DESCRIPTION + " text, ");
+//                sb.append(COLUMN_SEASONALITY + " text, ");
                 sb.append(COLUMN_TIMESTAMP + " long not null, ");
                 sb.append(COLUMN_LATITUDE + " real not null, ");
                 sb.append(COLUMN_LONGITUDE + " real not null, ");
@@ -244,6 +250,7 @@ public class EntityTable {
         static final String COLUMN_NUM_OF_PETS = "num_of_ticks";
         static final String COLUMN_LOCATION_AREA = "location_area";
         static final String COLUMN_IMAGE_URL = "image_url";
+//        static final String COLUMN_SEASONALITY = "season";
         static final String COLUMN_TIMESTAMP = "timestamp";
         static final String COLUMN_UPDATED_AT = "updated_at";
         static final String COLUMN_FK_USER_ID = "user_id";
@@ -260,6 +267,7 @@ public class EntityTable {
                 sb.append(COLUMN_NUM_OF_TICKS + " integer, ");
                 sb.append(COLUMN_LOCATION_AREA + " text not null, ");
                 sb.append(COLUMN_IMAGE_URL + " text, ");
+//                sb.append(COLUMN_SEASONALITY + " text, ");
                 sb.append(COLUMN_TIMESTAMP + " long not null, ");
                 sb.append(COLUMN_UPDATED_AT + " long, ");
                 sb.append(COLUMN_FK_USER_ID + " text not null, ");

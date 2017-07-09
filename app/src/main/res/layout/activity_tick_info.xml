@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorWhite"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/view_dimen_large">
+
+
+    <TextView
+        android:id="@+id/textview_static_tick_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/view_dimen_small"
+        android:gravity="center"
+        android:paddingBottom="@dimen/view_dimen_small"
+        android:paddingTop="@dimen/view_dimen_small"
+        android:text="@string/basicInfo"
+        android:textAlignment="center"
+        android:textColor="@color/colorPrimary"
+        android:textSize="@dimen/font_large" />
+
+    <View
+        android:id="@+id/horizontal_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/textview_static_tick_info"
+        android:layout_marginLeft="@dimen/view_dimen_large"
+        android:layout_marginRight="@dimen/view_dimen_large"
+        android:layout_marginTop="@dimen/view_dimen_medium"
+        android:background="@color/divider" />
+
+    <!-- Species-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="top"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textview_static_tick_species"
+            android:layout_width="@dimen/widget_dimen_X3_large"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/horizontal_separator"
+            android:layout_marginStart="@dimen/view_dimen_large"
+            android:layout_marginTop="@dimen/view_dimen_small"
+            android:gravity="start"
+            android:text="@string/tick_species"
+            android:textColor="@color/primaryText"
+            android:textSize="@dimen/font_small" />
+
+        <TextView
+            android:id="@+id/textview_tick_species"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/textview_static_tick_species"
+            android:layout_below="@id/horizontal_separator"
+            android:layout_marginEnd="@dimen/view_dimen_large"
+            android:layout_marginStart="@dimen/view_dimen_small"
+            android:layout_marginTop="@dimen/view_dimen_small"
+            android:layout_toEndOf="@id/textview_static_tick_species"
+            android:ellipsize="end"
+            android:gravity="start"
+            android:maxLines="1"
+            android:text="Lone Star Tick"
+            android:textColor="@color/secondaryText"
+            android:textSize="@dimen/font_small" />
+    </LinearLayout>
+
+    <!-- Formal Name -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="top"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textview_static_tick_formal_name"
+            android:layout_width="@dimen/widget_dimen_X3_large"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textview_tick_species"
+            android:layout_marginStart="@dimen/view_dimen_large"
+            android:layout_marginTop="@dimen/view_dimen_small"
+            android:gravity="start"
+            android:text="@string/tick_scientific_name"
+            android:textColor="@color/primaryText"
+            android:textSize="@dimen/font_small" />
+
+        <TextView
+            android:id="@+id/textview_tick_formal_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textview_tick_species"
+            android:layout_marginEnd="@dimen/view_dimen_large"
+            android:layout_marginStart="@dimen/view_dimen_small"
+            android:layout_marginTop="@dimen/view_dimen_small"
+            android:layout_toEndOf="@id/textview_static_tick_formal_name"
+            android:ellipsize="end"
+            android:gravity="start"
+            android:maxLines="1"
+            android:text="Amblyomma americanum"
+            android:textAlignment="center"
+            android:textColor="@color/secondaryText"
+            android:textSize="@dimen/font_small"
+            android:textStyle="italic" />
+    </LinearLayout>
+    <!-- Known For -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="top"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textview_static_known_for"
+            android:layout_width="@dimen/widget_dimen_X3_large"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textview_static_tick_formal_name"
+            android:layout_marginStart="@dimen/view_dimen_large"
+            android:layout_marginTop="@dimen/view_dimen_small"
+            android:gravity="start"
+            android:text="@string/tick_knownFor"
+            android:textColor="@color/primaryText"
+            android:textSize="@dimen/font_small" />
+
+        <TextView
+            android:id="@+id/textview_known_for"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textview_static_tick_formal_name"
+            android:layout_marginEnd="@dimen/view_dimen_large"
+            android:layout_marginStart="@dimen/view_dimen_small"
+            android:layout_marginTop="@dimen/view_dimen_small"
+            android:layout_toEndOf="@id/textview_static_known_for"
+            android:ellipsize="end"
+            android:gravity="start"
+            android:maxLines="10"
+            android:text="Tularemia"
+            android:textColor="@color/secondaryText"
+            android:textSize="@dimen/font_small" />
+    </LinearLayout>
+
+    <!-- Location Name -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="top"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textview_static_location"
+            android:layout_width="@dimen/widget_dimen_X3_large"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textview_static_known_for"
+            android:layout_marginStart="@dimen/view_dimen_large"
+            android:layout_marginTop="@dimen/view_dimen_small"
+            android:gravity="start"
+            android:text="@string/tick_location_habitat"
+            android:textColor="@color/primaryText"
+            android:textSize="@dimen/font_small" />
+
+        <TextView
+            android:id="@+id/textview_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textview_known_for"
+            android:layout_marginEnd="@dimen/view_dimen_large"
+            android:layout_marginStart="@dimen/view_dimen_small"
+            android:layout_marginTop="@dimen/view_dimen_small"
+            android:layout_toEndOf="@id/textview_static_location"
+            android:ellipsize="end"
+            android:gravity="start"
+            android:maxLines="5"
+            android:text="Dry Areas"
+            android:textColor="@color/secondaryText"
+            android:textSize="@dimen/font_small" />
+    </LinearLayout>
+    <!-- Seasonality -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="top"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textview_static_season"
+            android:layout_width="@dimen/widget_dimen_X3_large"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textview_static_location"
+            android:layout_marginStart="@dimen/view_dimen_large"
+            android:layout_marginTop="@dimen/view_dimen_small"
+            android:gravity="start"
+            android:text="@string/tick_season"
+            android:textColor="@color/primaryText"
+            android:textSize="@dimen/font_small" />
+
+        <TextView
+            android:id="@+id/textview_season"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textview_static_location"
+            android:layout_marginEnd="@dimen/view_dimen_large"
+            android:layout_marginStart="@dimen/view_dimen_small"
+            android:layout_marginTop="@dimen/view_dimen_small"
+            android:layout_toEndOf="@id/textview_static_season"
+            android:ellipsize="end"
+            android:gravity="start"
+            android:maxLines="5"
+            android:text="Summer"
+            android:textColor="@color/secondaryText"
+            android:textSize="@dimen/font_small" />
+    </LinearLayout>
+    <!-- Geographical Location -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="top"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textview_static_geoLocation"
+            android:layout_width="@dimen/widget_dimen_X3_large"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textview_static_season"
+            android:layout_marginStart="@dimen/view_dimen_large"
+            android:layout_marginTop="@dimen/view_dimen_small"
+            android:gravity="start"
+            android:text="@string/tick_geo_location"
+            android:textColor="@color/primaryText"
+            android:textSize="@dimen/font_small" />
+
+        <TextView
+            android:id="@+id/textview_geoLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textview_static_season"
+            android:layout_marginEnd="@dimen/view_dimen_large"
+            android:layout_marginStart="@dimen/view_dimen_small"
+            android:layout_marginTop="@dimen/view_dimen_small"
+            android:layout_toEndOf="@id/textview_static_geoLocation"
+            android:ellipsize="end"
+            android:gravity="start"
+            android:maxLines="10"
+            android:text="Costal"
+            android:textColor="@color/secondaryText"
+            android:textSize="@dimen/font_small" />
+
+    </LinearLayout>
+</LinearLayout>

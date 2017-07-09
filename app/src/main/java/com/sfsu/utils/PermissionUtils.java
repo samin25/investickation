@@ -1,7 +1,11 @@
 package com.sfsu.utils;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.support.v4.content.ContextCompat;
 
 import com.sfsu.investickation.R;
 
@@ -110,32 +114,69 @@ public class PermissionUtils {
         mEditor.commit();
     }
 
-    public boolean isFineLocationPermissionApproved() {
-        return mPermissionPreferences.getBoolean(FINE_LOCATION_PERMISSION, false);
+    public boolean isFineLocationPermissionApproved(Context context) {
+
+        if ((int) Build.VERSION.SDK_INT >= 23) {
+            int permissionCheck = ContextCompat.checkSelfPermission(context,
+                    Manifest.permission.ACCESS_FINE_LOCATION);
+            return (PackageManager.PERMISSION_GRANTED==permissionCheck)?true:false;
+        }else {
+            return mPermissionPreferences.getBoolean(FINE_LOCATION_PERMISSION, false);
+        }
     }
 
-    public boolean isCoarseLocationPermissionApproved() {
-        return mPermissionPreferences.getBoolean(COARSE_LOCATION_PERMISSION, false);
+    public boolean isCoarseLocationPermissionApproved(Context context) {
+        if ((int) Build.VERSION.SDK_INT >= 23) {
+            int permissionCheck = ContextCompat.checkSelfPermission(context,
+                    Manifest.permission.ACCESS_COARSE_LOCATION);
+            return (PackageManager.PERMISSION_GRANTED==permissionCheck)?true:false;
+        }else {
+            return mPermissionPreferences.getBoolean(COARSE_LOCATION_PERMISSION, false);
+        }
     }
 
-    public boolean isWiFiPermissionApproved() {
-        return mPermissionPreferences.getBoolean(WIFI_PERMISSION, false);
+    public boolean isWiFiPermissionApproved(Context context) {
+        if ((int) Build.VERSION.SDK_INT >= 23) {
+            int permissionCheck = ContextCompat.checkSelfPermission(context,
+                    Manifest.permission.ACCESS_WIFI_STATE);
+            return (PackageManager.PERMISSION_GRANTED==permissionCheck)?true:false;
+        }else {
+            return mPermissionPreferences.getBoolean(WIFI_PERMISSION, false);
+        }
     }
 
     public boolean isInternetPermissionApproved() {
         return mPermissionPreferences.getBoolean(INTERNET_PERMISSION, false);
     }
 
-    public boolean isWritePermissionApproved() {
-        return mPermissionPreferences.getBoolean(WRITE_PERMISSION, false);
+    public boolean isWritePermissionApproved(Context context) {
+        if ((int) Build.VERSION.SDK_INT >= 23) {
+            int permissionCheck = ContextCompat.checkSelfPermission(context,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            return (PackageManager.PERMISSION_GRANTED==permissionCheck)?true:false;
+        }else {
+            return mPermissionPreferences.getBoolean(WRITE_PERMISSION, false);
+        }
     }
 
-    public boolean isReadPermissionApproved() {
-        return mPermissionPreferences.getBoolean(READ_PERMISSION, false);
+    public boolean isReadPermissionApproved(Context context) {
+        if ((int) Build.VERSION.SDK_INT >= 23) {
+            int permissionCheck = ContextCompat.checkSelfPermission(context,
+                    Manifest.permission.ACCESS_COARSE_LOCATION);
+            return (PackageManager.PERMISSION_GRANTED==permissionCheck)?true:false;
+        }else {
+            return mPermissionPreferences.getBoolean(READ_PERMISSION, false);
+        }
     }
 
-    public boolean isCameraPermissionApproved() {
-        return mPermissionPreferences.getBoolean(CAMERA_PERMISSION, false);
+    public boolean isCameraPermissionApproved(Context context) {
+        if ((int) Build.VERSION.SDK_INT >= 23) {
+            int permissionCheck = ContextCompat.checkSelfPermission(context,
+                    Manifest.permission.ACCESS_COARSE_LOCATION);
+            return (PackageManager.PERMISSION_GRANTED==permissionCheck)?true:false;
+        }else {
+            return mPermissionPreferences.getBoolean(CAMERA_PERMISSION, false);
+        }
     }
 
     public boolean isNetworkPermissionApproved() {

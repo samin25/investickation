@@ -12,6 +12,7 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -48,6 +49,7 @@ public class RetrofitApiClient {
     };
     // main client
     private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+    private static HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
     // size
     private static long SIZE_OF_CACHE = 10 * 1024 * 1024; // 10 MB
     // Retrofit
@@ -108,7 +110,8 @@ public class RetrofitApiClient {
         }
 
         // build the Retrofit instance with the Token Authorization OkHttpClient.
-        Retrofit retrofit = builder.client(httpClient.build()).build();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        Retrofit retrofit = builder.client(httpClient.addInterceptor(interceptor).build()).build();
 
         // return the ServiceClass passed.
         return retrofit.create(serviceClass);

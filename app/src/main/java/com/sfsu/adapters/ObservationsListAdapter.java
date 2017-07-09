@@ -53,8 +53,10 @@ public class ObservationsListAdapter extends RecyclerView.Adapter<ObservationsLi
         try {
             if (holder != null) {
                 Observation mObservation = mObservationList.get(position);
+                Log.i(this.getClass().getSimpleName(), Double.toString(mObservation.getLatitude()));
                 holder.txtView_observationName.setText(mObservation.getTickName());
-                holder.txtView_location.setText(mObservation.getGeoLocation());
+                String geoLoc= mObservation.getGeoLocation().split("\n@#$")[0];
+                holder.txtView_location.setText(geoLoc);
                 String[] dateAndTime = AppUtils.getDateAndTimeSeparate(mObservation.getTimestamp());
                 holder.txtView_date.setText(dateAndTime[0]);// set date
                 holder.txtView_time.setText(dateAndTime[1]); // set time
@@ -68,8 +70,12 @@ public class ObservationsListAdapter extends RecyclerView.Adapter<ObservationsLi
 
                 // FIXME: load image into ImageView
                 if (mObservation.getImageUrl().startsWith("http")) {
+                    Log.i(TAG, "INSIDE HTTP");
+//                    Picasso.with(mContext).load(mObservation.getImageUrl()).resize(400, 400).into(holder.imageView_tickImage);
                     Picasso.with(mContext).load(mObservation.getImageUrl()).into(holder.imageView_tickImage);
+//                    Picasso.with(mContext).load(mObservation.getImageUrl()).fit().resizeDimen(R.dimen.widget_dimen_X_large, R.dimen.widget_dimen_X_large).into(holder.imageView_tickImage);
                 } else {
+                    Log.i(TAG, "NOT HTTP");
                     Bitmap bitmap = new ImageController(mContext).getBitmapForImageView(holder.imageView_tickImage, mObservation.getImageUrl());
                     holder.imageView_tickImage.setImageBitmap(bitmap);
                 }
@@ -78,6 +84,8 @@ public class ObservationsListAdapter extends RecyclerView.Adapter<ObservationsLi
                 if (mObservation.isVerified()) {
                     holder.icon_verified.setImageResource(R.mipmap.ic_verified_gray_24dp);
                 }
+
+                holder.cv.invalidate();
 
             }
         } catch (Exception e) {

@@ -26,7 +26,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import rx.Observable;
 import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
+import rx.android.schedulers .AndroidSchedulers;
 import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 
@@ -152,6 +152,8 @@ public class UserRequestHandler extends ApiRequestHandler {
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
                 if (t != null && t.getMessage() != null) {
+                    Log.d("Derp", call.request().url().toString());
+                    Log.d("Derp", t.toString());
                     mBus.post(new LoginEvent.OnLoadingError(t.getMessage(), -1));
                 } else {
                     mBus.post(LoginEvent.FAILED);

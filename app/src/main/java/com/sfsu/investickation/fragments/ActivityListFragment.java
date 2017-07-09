@@ -212,14 +212,16 @@ public class ActivityListFragment extends Fragment implements SearchView.OnQuery
         } else {
             if (mSwipeRefreshLayout.isRefreshing())
                 mSwipeRefreshLayout.setRefreshing(false);
-            // get List of Activities from Database
-            mLocalActivitiesList = (List<Activities>) dbController.getAll();
             // important to clear all the Activities before assigning it to new list
             if (mActivitiesList != null) {
                 mActivitiesList.clear();
             }
+            // get List of Activities from Database
+            mLocalActivitiesList = (List<Activities>) dbController.getAll();
             // assign the locally received Activities from local data storage
             mActivitiesList = mLocalActivitiesList;
+            if(mResponseActivitiesList!=null && mResponseActivitiesList.size()>0)
+                mActivitiesList.addAll(mResponseActivitiesList);
 
             if (mActivitiesList.size() > 0 && mActivitiesList != null) {
                 displayActivityList();
@@ -323,7 +325,10 @@ public class ActivityListFragment extends Fragment implements SearchView.OnQuery
         activitiesListAdapter.notifyDataSetChanged();
         if (recyclerView_activity != null) {
 
-            recyclerView_activity.setAdapter(activitiesListAdapter);
+            if(recyclerView_activity.getAdapter()!=null)
+                recyclerView_activity.swapAdapter(activitiesListAdapter,true);
+            else
+                recyclerView_activity.setAdapter(activitiesListAdapter);
 
             // touch listener when the user clicks on the Activity in the List.
             recyclerView_activity.addOnItemTouchListener(new RecyclerItemClickListener(mContext, recyclerView_activity,
@@ -353,6 +358,9 @@ public class ActivityListFragment extends Fragment implements SearchView.OnQuery
                 }
             });
 
+            //show the list view again
+            txtView_activityListInfo.setVisibility(View.GONE);
+            recyclerView_activity.setVisibility(View.VISIBLE);
             // finally apply the animation
             fab_addActivity.startAnimation(animation);
 
@@ -429,7 +437,7 @@ public class ActivityListFragment extends Fragment implements SearchView.OnQuery
     /**
      * Helper method to filter the List of Activities on search text change in this Fragment.
      *
-     * @param serverActivitiesList
+     * @param activitiesList
      * @param query
      * @return
      */

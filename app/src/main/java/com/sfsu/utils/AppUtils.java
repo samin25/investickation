@@ -121,6 +121,15 @@ public class AppUtils {
         return new ArrayList<>(Arrays.asList(states));
     }
 
+//    public static ArrayList<String> getTicks() {
+//        String[] states = new String[]{"Unknown Tick", "Ixodes pacificus", "Ixodes woodi", "Ixodes spinipalpis", "Ixodes angustus",
+//                "Dermacentor occidentalis", "Dermacentor variabilis", "Dermacentor andersonii", "Dermacentor albipictus",
+//                "Rhipicephalus sanguineus", "Ornithodoros hermsii", "Hemaphysalis leporspalustris", "Ixodes scapularis",
+//                "Amblyomma americanum"};
+//
+//        return new ArrayList<>(Arrays.asList(states));
+//    }
+
     /**
      * TODO: not required.
      * Returns the result of ping to server for successful availability and connection establishment

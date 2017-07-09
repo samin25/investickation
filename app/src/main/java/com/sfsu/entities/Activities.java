@@ -2,8 +2,11 @@ package com.sfsu.entities;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
+
+import java.util.Comparator;
 
 
 /**
@@ -21,7 +24,7 @@ import com.google.gson.annotations.SerializedName;
  * </p>
  * Created by Pavitra on 5/19/2015.
  */
-public class Activities implements Entity, Parcelable {
+public class Activities implements Entity, Parcelable,Comparable<Activities> {
 
     public final static transient int ID_LENGTH = 23;
     public static final Creator<Activities> CREATOR = new Creator<Activities>() {
@@ -35,6 +38,9 @@ public class Activities implements Entity, Parcelable {
             return new Activities[size];
         }
     };
+
+
+
     private String id;
     @SerializedName("name")
     private String activityName;
@@ -57,7 +63,7 @@ public class Activities implements Entity, Parcelable {
      * Constructor overloading for creating the Activities Model and sending the object to ActivityRunningFragment fragment.
      *
      * @param name
-     * @param num_people
+     * @param num_of_people
      * @param num_pets
      * @param timestamp
      */
@@ -80,7 +86,7 @@ public class Activities implements Entity, Parcelable {
      * @param image_url
      * @param distance
      * @param timestamp
-     * @param created_at
+     * @param
      * @param updated_at
      */
     public Activities(String name, String location_area, int num_of_people, int num_pets, String image_url, int distance, long
@@ -100,9 +106,9 @@ public class Activities implements Entity, Parcelable {
      * Constructor for DEMO purpose.
      *
      * @param name
-     * @param num_people
+     * @param num_of_people
      * @param num_pets
-     * @param num_ticks
+     * @param
      */
     public Activities(String name, int num_of_people, int num_pets) {
         this.activityName = name;
@@ -199,7 +205,7 @@ public class Activities implements Entity, Parcelable {
     /**
      * Returns the state of the this Activity
      *
-     * @param state
+     * @param
      */
     public STATE getState() {
         return activityState;
@@ -281,6 +287,16 @@ public class Activities implements Entity, Parcelable {
         dest.writeLong(updated_at);
         dest.writeString(user_id);
         dest.writeString(image_url);
+    }
+
+
+    @Override
+    public int compareTo(@NonNull Activities activities) {
+        if (activities.getTimestamp()>this.timestamp)
+            return -1;
+        else
+            return 1;
+
     }
 
     /**

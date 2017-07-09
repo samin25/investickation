@@ -1,6 +1,7 @@
 package com.sfsu.network.handler;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.sfsu.network.auth.AuthPreferences;
@@ -59,6 +60,7 @@ public class ApiRequestHandler {
         this.mContext = mContext;
         mAuthPreferences = new AuthPreferences(mContext);
         ACCESS_TOKEN = mAuthPreferences.getAccessToken();
+        Log.e("@@GTOKEN HERE: ###>>>>>",ACCESS_TOKEN);
         USER_ID = mAuthPreferences.getUser_id();
     }
 

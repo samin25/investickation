@@ -209,6 +209,7 @@ public class LocationController implements GoogleApiClient.ConnectionCallbacks,
             // handle the Geo Location.
             setLocationArea(currentLatitude, currentLongitude);
         } catch (Exception e) {
+            e.printStackTrace();
             Log.i(TAG, "handleNewLocation: ");
         }
     }
@@ -272,23 +273,30 @@ public class LocationController implements GoogleApiClient.ConnectionCallbacks,
         try {
             // Here 1 represent max location result to returned, by documents it recommended 1 to 5
             addressesList = mGeocoder.getFromLocation(latitude, longitude, 1);
-            String neighborhood = addressesList.get(0).getSubLocality();
-            String locality = addressesList.get(0).getSubLocality();
-            String knownName = addressesList.get(0).getFeatureName();
+//            String neighborhood = addressesList.get(0).getSubLocality();
+//            String locality = addressesList.get(0).getSubLocality();
+//            String knownName = addressesList.get(0).getFeatureName();
+//
+//            StringBuilder sb = new StringBuilder();
+//            if (knownName != null) {
+//                sb.append(knownName);
+//            }
+//            if (neighborhood != null) {
+//                if (sb.length() > 0)
+//                    sb.append(", " + neighborhood);
+//                else
+//                    sb.append(neighborhood);
+//            }
 
-            StringBuilder sb = new StringBuilder();
-            if (knownName != null) {
-                sb.append(knownName);
-            }
-            if (neighborhood != null) {
-                if (sb.length() > 0)
-                    sb.append(", " + neighborhood);
-                else
-                    sb.append(neighborhood);
-            }
+
+            StringBuilder strAddress = new StringBuilder();
+            String address = addressesList.get(0).getAddressLine(0) + "\n";
+            strAddress.append(address);
+            String city = addressesList.get(0).getLocality() + "\n ";
+            strAddress.append(city);
 
             // finally pass it to the callback interface.
-            mInterface.setLocationArea(sb.toString());
+            mInterface.setLocationArea(strAddress.toString());
         } catch (IOException e) {
             Log.i(TAG, "setLocationArea: " + e.getCause());
         }

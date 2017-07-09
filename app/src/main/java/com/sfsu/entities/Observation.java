@@ -2,6 +2,7 @@ package com.sfsu.entities;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -176,6 +177,7 @@ public class Observation implements Parcelable, Entity, Serializable {
     }
 
     public double getLatitude() {
+//        Log.i(this.getClass().getSimpleName(), Double.toString(latitude));
         return latitude;
     }
 

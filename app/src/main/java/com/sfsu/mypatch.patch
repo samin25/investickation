@@ -1,0 +1,12 @@
+diff --git a/app/src/main/ic_launcher-web.png b/app/src/main/ic_launcher-web.png
+deleted file mode 100644
+index 33b5f7e..0000000
+Binary files a/app/src/main/ic_launcher-web.png and /dev/null differ
+diff --git a/app/src/main/res/ic_launcher.zip b/app/src/main/res/ic_launcher.zip
+deleted file mode 100644
+index 320b06d..0000000
+Binary files a/app/src/main/res/ic_launcher.zip and /dev/null differ
+diff --git a/app/src/main/res/ic_launcher/web_hi_res_512.png b/app/src/main/res/ic_launcher/web_hi_res_512.png
+deleted file mode 100755
+index 93179bf..0000000
+Binary files a/app/src/main/res/ic_launcher/web_hi_res_512.png and /dev/null differ

@@ -1,11 +1,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:fab="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/colorWhite"
-                android:orientation="vertical"
-                tools:context=".UserActivityMasterActivity">
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    android:orientation="vertical"
+    tools:context=".UserActivityMasterActivity">
 
 
     <!-- Required: Layout to hold MapView-->
@@ -19,7 +19,7 @@
             android:id="@+id/mapview_activity_running"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:enabled="true"/>
+            android:enabled="true" />
 
     </LinearLayout>
 
@@ -34,7 +34,7 @@
         android:layout_marginEnd="@dimen/view_dimen_large"
         fab:fab_colorNormal="@color/colorPrimary"
         fab:fab_colorPressed="@color/colorPrimaryDark"
-        fab:fab_icon="@mipmap/ic_notifications_white_24dp"/>
+        fab:fab_icon="@mipmap/ic_notifications_white_24dp" />
 
 
     <TextView
@@ -47,7 +47,7 @@
         android:text="@string/activityRunning_activityInfo"
         android:textAlignment="center"
         android:textColor="@color/primaryText"
-        android:textSize="@dimen/font_small"/>
+        android:textSize="@dimen/font_small" />
 
     <TextView
         android:id="@+id/textview_activity_name"
@@ -59,7 +59,7 @@
         android:text="Hiking @ Golden Gate bridge"
         android:textAlignment="center"
         android:textColor="@color/colorPrimary"
-        android:textSize="@dimen/font_large"/>
+        android:textSize="@dimen/font_large" />
 
     <TextView
         android:id="@+id/textview_act_runing_status"
@@ -76,7 +76,7 @@
         android:text="@string/activity_running_status_active"
         android:textAlignment="center"
         android:textColor="@color/colorWhite"
-        android:textSize="@dimen/font_small"/>
+        android:textSize="@dimen/font_small" />
 
 
     <!--Line separator-->
@@ -86,57 +86,103 @@
         android:layout_height="@dimen/separator_dimen"
         android:layout_below="@id/textview_act_runing_status"
         android:layout_marginTop="@dimen/view_dimen_small"
-        android:background="@color/divider"/>
+        android:background="@color/divider" />
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/cardview_activity_running_add_observation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/view_divider"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="@dimen/view_dimen_medium"
-        android:elevation="@dimen/cardview_elevation"
-        android:padding="@dimen/view_dimen_large">
-
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
-            android:paddingBottom="@dimen/view_dimen_small"
-            android:paddingLeft="@dimen/view_dimen_large"
-            android:paddingRight="@dimen/view_dimen_large"
-            android:paddingTop="@dimen/view_dimen_small">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="@string/button_addObservation"
-                android:textColor="@color/colorWhite"
-                android:textSize="@dimen/font_small"/>
-        </RelativeLayout>
-    </android.support.v7.widget.CardView>
-
-    <com.getbase.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_act_run_activity_stop"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_marginBottom="@dimen/view_dimen_large"
-        fab:fab_colorNormal="@color/colorPrimary"
-        fab:fab_colorPressed="@color/colorPrimaryDark"
-        fab:fab_icon="@mipmap/ic_stop_white_24dp"/>
+        android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/textview_static_act_run_stop_activity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/fab_act_run_activity_stop"
-        android:layout_centerInParent="true"
-        android:layout_marginBottom="@dimen/view_dimen_small"
-        android:text="@string/text_stop_activity"
-        android:textColor="@color/secondaryText"
-        android:textSize="@dimen/font_X_small"/>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textview_static_act_run_stop_activity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginBottom="@dimen/view_dimen_small"
+                android:text="@string/text_stop_activity"
+                android:textColor="@color/secondaryText"
+                android:textSize="@dimen/font_X_small" />
+
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_act_run_activity_stop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                fab:fab_colorNormal="@color/colorPrimary"
+                fab:fab_colorPressed="@color/colorPrimaryDark"
+                fab:fab_icon="@mipmap/ic_stop_white_24dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/view_dimen_small"
+                android:text="@string/button_addObservation"
+                android:textColor="@color/secondaryText"
+                android:textSize="@dimen/font_X_small" />
+
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_act_run_activity_add_observation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                fab:fab_colorNormal="@color/colorPrimary"
+                fab:fab_colorPressed="@color/colorPrimaryDark"
+                fab:fab_icon="@mipmap/ic_add_white_36dp" />
+
+        </LinearLayout>
+
+<!--
+        <android.support.v7.widget.CardView
+            android:id="@+id/cardview_activity_running_add_observation"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginRight="@dimen/view_dimen_large"
+            android:layout_weight="1"
+            android:elevation="@dimen/cardview_elevation"
+            android:padding="@dimen/view_dimen_large">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:paddingBottom="@dimen/view_dimen_small"
+                android:paddingLeft="@dimen/view_dimen_large"
+                android:paddingRight="@dimen/view_dimen_large"
+                android:paddingTop="@dimen/view_dimen_small">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="@string/button_addObservation"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/font_small" />
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+-->
+
+
+    </LinearLayout>
+
 
 </RelativeLayout>

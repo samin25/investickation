@@ -31,6 +31,8 @@ public class TickDao implements EntityDao {
             EntityTable.TicksTable.COLUMN_DESCRIPTION,
             EntityTable.TicksTable.COLUMN_FOUND_NEAR,
             EntityTable.TicksTable.COLUMN_IMAGE,
+            EntityTable.TicksTable.COLUMN_SEASONALITY,
+            EntityTable.TicksTable.COLUMN_GEO_LOCATION,
             EntityTable.TicksTable.COLUMN_CREATED_AT,
             EntityTable.TicksTable.COLUMN_UPDATED_AT};
 
@@ -53,6 +55,8 @@ public class TickDao implements EntityDao {
     public void setDatabase(SQLiteDatabase db) {
         this.db = db;
     }
+    // ** CHANGE -- local database -- clean data and send to server side
+    // ** retrieve guide from server
 
     /**
      * save(Tick) method is used to save the entries (field values) in to Tick Database table
@@ -92,6 +96,10 @@ public class TickDao implements EntityDao {
                 Tick tick = tickList.get(i);
                 ContentValues contentValues = getContentValues(tick);
                 db.insert(EntityTable.TicksTable.TABLENAME, null, contentValues);
+                List<Tick> ticks = getAll();
+                if (!ticks.contains(tick)) {
+                    isSaved = db.insert(EntityTable.TicksTable.TABLENAME, null, contentValues);
+                }
             }
             isSaved = tickList.size();
         } catch (SQLiteException se) {
@@ -123,6 +131,8 @@ public class TickDao implements EntityDao {
             contentValues.put(EntityTable.TicksTable.COLUMN_DESCRIPTION, tick.getDescription());
             contentValues.put(EntityTable.TicksTable.COLUMN_FOUND_NEAR, tick.getFound_near_habitat());
             contentValues.put(EntityTable.TicksTable.COLUMN_IMAGE, tick.getImageUrl());
+            contentValues.put(EntityTable.TicksTable.COLUMN_SEASONALITY, tick.getSeason());
+            contentValues.put(EntityTable.TicksTable.COLUMN_GEO_LOCATION, tick.getGeoLocation());
             contentValues.put(EntityTable.TicksTable.COLUMN_CREATED_AT, tick.getCreated_at());
             contentValues.put(EntityTable.TicksTable.COLUMN_UPDATED_AT, tick.getUpdated_at());
 
@@ -188,6 +198,8 @@ public class TickDao implements EntityDao {
                 tickItem.setImageUrl(c.getString(7));
                 tickItem.setCreated_at(c.getLong(8));
                 tickItem.setUpdated_at(c.getLong(9));
+                tickItem.setSeason(c.getString(10));
+                tickItem.setGeoLocation(c.getString(11));
             }
             return tickItem;
         } catch (SQLiteException se) {

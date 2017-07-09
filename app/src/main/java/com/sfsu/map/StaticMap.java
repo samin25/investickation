@@ -117,6 +117,7 @@ public class StaticMap {
                 } else if (counter > 0) {
                     pathBuilder.append(PIPE).append(mlatLngs[i].latitude).append(COMMA).append(mlatLngs[i].longitude);
                 }
+                counter++;
             }
             return this;
         }

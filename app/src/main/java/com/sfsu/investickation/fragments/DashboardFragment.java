@@ -65,6 +65,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
     TextView txtView_activitiesCount;
     @Bind(R.id.textview_observation_count)
     TextView txtView_observationCount;
+    @Bind(R.id.listView_recent_activities)
     ListView mListViewActivities;
     private Context mContext;
     private List<Activities> mActivitiesList;
@@ -86,7 +87,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         super.onCreate(savedInstanceState);
         dbTickController = new DatabaseDataController(mContext, TickDao.getInstance());
         mPermissionUtils = new PermissionUtils(mContext);
-        if (mPermissionUtils.isCoarseLocationPermissionApproved() && mPermissionUtils.isFineLocationPermissionApproved()) {
+        if (mPermissionUtils.isCoarseLocationPermissionApproved(getContext()) && mPermissionUtils.isFineLocationPermissionApproved(getContext())) {
             // fire event to get the total count of Activities and Observations made by the user
             if (AppUtils.isConnectedOnline(mContext))
                 BusProvider.bus().post(new UserEvent.OnLoadingInitialized("", ApiRequestHandler.GET_ACT_OBS_COUNT));
@@ -142,6 +143,11 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
             }
         } else {
             Log.i(TAG, "askForPermission: not working");
+            mPermissionUtils.setPermission(PermissionUtils.COARSE_LOCATION);
+            mPermissionUtils.setPermission(PermissionUtils.FINE_LOCATION);
+            mPermissionUtils.setPermission(PermissionUtils.INTERNET);
+            mPermissionUtils.setPermission(PermissionUtils.WIFI);
+            mPermissionUtils.setPermission(PermissionUtils.NETWORK);
         }
     }
 
@@ -227,9 +233,14 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        if (outState == null) {
+            outState = new Bundle();
+        }
+        if (mCombinedCount!= null) {
+            outState.putInt("activitiesCount", (mCombinedCount!=null)?mCombinedCount.activitiesCount:0);
+            outState.putInt("observationCount", (mCombinedCount!=null)?mCombinedCount.observationsCount:0);
+         }
         super.onSaveInstanceState(outState);
-        outState.putInt("activitiesCount", mCombinedCount.activitiesCount);
-        outState.putInt("observationCount", mCombinedCount.observationsCount);
     }
 
     @Override

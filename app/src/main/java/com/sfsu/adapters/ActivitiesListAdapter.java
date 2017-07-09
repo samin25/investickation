@@ -66,7 +66,7 @@ public class ActivitiesListAdapter extends RecyclerView.Adapter<ActivitiesListAd
                 String pets = mActivity.getNum_of_pets() + " pets";
                 holder.txtView_pets.setText(pets);
                 // Observations
-                String observations = mActivity.getNum_of_ticks() + " Observations";
+                String observations = mActivity.getNum_of_ticks() + " ticks";
                 holder.txtView_observations.setText(observations);
                 // total People
                 String people = mActivity.getNum_of_people() + " people";

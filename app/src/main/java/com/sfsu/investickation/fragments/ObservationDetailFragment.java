@@ -1,9 +1,11 @@
 package com.sfsu.investickation.fragments;
 
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -16,7 +18,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +42,7 @@ import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import uk.co.senab.photoview.PhotoViewAttacher;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -75,6 +80,7 @@ public class ObservationDetailFragment extends Fragment implements UploadAlertDi
     private IObservationDetailCallbacks mInterface;
     private MenuItem uploadMenuItem;
     private UploadAlertDialog mUploadAlertDialog;
+    private PhotoViewAttacher mAttacher;
 
     public ObservationDetailFragment() {
         // Required empty public constructor
@@ -83,7 +89,6 @@ public class ObservationDetailFragment extends Fragment implements UploadAlertDi
     /**
      * Returns the instance of {@link ObservationDetailFragment} Fragment.
      *
-     * @param key
      * @param mObservation
      * @return
      */
@@ -152,10 +157,8 @@ public class ObservationDetailFragment extends Fragment implements UploadAlertDi
             // geolocation
             String geoLocation = mObservation.getGeoLocation() == "" || mObservation.getGeo_location() == null ? "No location" :
                     mObservation.getGeoLocation();
-            textView_geoLocation.setText(geoLocation);
-            // lat long
-            String latLng = mObservation.getLatitude() + ", " + mObservation.getLongitude();
-            textView_latLng.setText(latLng);
+            textView_geoLocation.setText(geoLocation.split("\\|")[0]);
+
             // relative date time
             long now = System.currentTimeMillis();
             CharSequence charSequence = DateUtils.getRelativeTimeSpanString(mObservation.getTimestamp(), now, DateUtils.DAY_IN_MILLIS);
@@ -168,7 +171,15 @@ public class ObservationDetailFragment extends Fragment implements UploadAlertDi
             } else {
                 Bitmap bitmap = new ImageController(mContext).getBitmapForImageView(imageView_tickImage, mObservation.getImageUrl());
                 imageView_tickImage.setImageBitmap(bitmap);
+
             }
+
+            imageView_tickImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showImage();
+                }
+            });
 
             // depending on the availability of network , make a network call and get the data or get data from DB
             if (AppUtils.isConnectedOnline(mContext)) {
@@ -186,10 +197,40 @@ public class ObservationDetailFragment extends Fragment implements UploadAlertDi
                 icon_verified.setImageResource(R.mipmap.ic_verified_gray_24dp);
                 textView_tickSpecies.setText(mObservation.getSpecies());
             }
+            // lat long
+//            String latLng = mObservation.getLatitude() + ", " + mObservation.getLongitude();
+            String latLng = "NA";
+            if(geoLocation.split("\\|").length>1) {
+                 latLng= (geoLocation.split("\\|")[1] != null ? geoLocation.split("\\|")[1] : "0.0") + ", " + (geoLocation.split("\\|")[2] != null ? geoLocation.split("\\|")[2] : "0.0");
+            }textView_latLng.setText(latLng);
         } catch (Exception e) {
-            if (BuildConfig.DEBUG)
-                Log.i(TAG, e.getMessage());
+                Log.e(TAG, e.getMessage());
         }
+    }
+
+    public void showImage() {
+        Dialog builder = new Dialog(mContext);
+        builder.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        builder.getWindow().setBackgroundDrawable(
+                new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                //nothing;
+            }
+        });
+
+        ImageView imageView = new ImageView(this.getContext());
+//        Bitmap bitmap = new ImageController(mContext).getBitmapForImageView(imageView, mObservation.getImageUrl());
+//        imageView.setImageBitmap(bitmap);
+        Picasso.with(mContext).load(mObservation.getImageUrl()).into(imageView);
+        mAttacher = new PhotoViewAttacher(imageView);
+
+        builder.addContentView(imageView, new RelativeLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT));
+        builder.show();
+        mAttacher.update();
     }
 
     @Override
@@ -201,10 +242,10 @@ public class ObservationDetailFragment extends Fragment implements UploadAlertDi
 
     @Override
     public void onStop() {
+        if(dbController != null) dbController.closeConnection();
+        if(dbActivitiesController != null) dbActivitiesController.closeConnection();
+        if(dbTicksController != null) dbTicksController.closeConnection();
         super.onStop();
-        dbController.closeConnection();
-        dbActivitiesController.closeConnection();
-        dbTicksController.closeConnection();
     }
 
     /**

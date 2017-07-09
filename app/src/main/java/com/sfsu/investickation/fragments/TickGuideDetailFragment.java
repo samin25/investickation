@@ -2,11 +2,14 @@ package com.sfsu.investickation.fragments;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +19,7 @@ import com.sfsu.adapters.ImagePagerAdapter;
 import com.sfsu.entities.Tick;
 import com.sfsu.investickation.R;
 import com.sfsu.investickation.TickGuideMasterActivity;
+import com.sfsu.investickation.TickInfoActivity;
 import com.viewpagerindicator.CirclePageIndicator;
 
 import java.util.ArrayList;
@@ -23,6 +27,14 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+
+
+// sophia added
+
+import android.support.v4.app.FragmentManager;
+
+import static com.sfsu.investickation.R.id.viewPager_tickDet_Images;
+
 
 /**
  * Displays the detailed information about all the Ticks contained in the InvesTICKations project.
@@ -32,27 +44,39 @@ public class TickGuideDetailFragment extends Fragment {
     private final String TAG = "~!@#TickDetailFrag";
     @Bind(R.id.textview_known_for)
     TextView txtView_knownFor;
-    @Bind(R.id.textview_tick_formal_name)
-    TextView txtView_tickFormalName;
+    @Bind(R.id.textview_tick_formal_name_inDetails)
+    TextView txtView_tickFormalNameDetails;
+    @Bind(R.id.textview_tick_formal_name_inHeading)
+    TextView txtView_tickFormalNameHeading;
     @Bind(R.id.textview_location)
     TextView txtView_tickLocation;
-    @Bind(R.id.textview_tick_name)
-    TextView txtView_tickName;
+//    @Bind(R.id.textview_tick_name)
+//    TextView txtView_tickName;
     @Bind(R.id.textview_tick_species)
     TextView txtView_tickSpecies;
     @Bind(R.id.textview_tick_details)
     TextView txtView_description;
-    @Bind(R.id.viewPager_tickDet_Images)
+    @Bind(R.id.textview_season)
+    TextView txtView_season;
+    @Bind(R.id.textview_geoLocation)
+    TextView txtView_geoLocation;
+    @Bind(viewPager_tickDet_Images)
     ViewPager mViewPager;
     @Bind(R.id.circlepager_indicator_images)
     CirclePageIndicator mCirclePageIndicator;
+    @Bind(R.id.button_tick_info)
+    FloatingActionButton tickInfoButton;
     private Bundle args;
     private Tick mTick;
     private Context mContext;
     private ImagePagerAdapter mImagePagerAdapter;
     // arrayList of imageUrls
-    private List<Integer> imageUrls;
+    private List<String> imageUrls;
+    // private List<Interger> imageUrls;
     private int currentPage;
+
+    // sophia added
+    private FragmentManager mFragmentManager;
 
 
     public TickGuideDetailFragment() {
@@ -90,6 +114,9 @@ public class TickGuideDetailFragment extends Fragment {
         if (getArguments() != null) {
             args = getArguments();
         }
+
+
+
     }
 
     @Override
@@ -105,37 +132,70 @@ public class TickGuideDetailFragment extends Fragment {
         String title = getResources().getString(R.string.tickDetails_toolbar_title);
         collapsingToolbar.setTitle(title);
 
-        imageUrls = new ArrayList<>();
-        imageUrls.add(R.drawable.image_1);
-        imageUrls.add(R.drawable.image_2);
-        imageUrls.add(R.drawable.image_3);
-        imageUrls.add(R.drawable.image_4);
+//        imageUrls = new ArrayList<>();
+//        imageUrls.add(mTick.getImageUrl());
+////        imageUrls.add("https://s3-us-west-2.amazonaws.com/tickphotos/Ixodes+pacificus_collage.png"); // list of Strings
+////        imageUrls.add(R.drawable.image_2);
+////        imageUrls.add(R.drawable.image_3);
+////        imageUrls.add(R.drawable.image_4);
+//
+//        mImagePagerAdapter = new ImagePagerAdapter(mContext, imageUrls);
+//
+//        mViewPager.setAdapter(mImagePagerAdapter);
+//        mCirclePageIndicator.setViewPager(mViewPager);
+//
+//        mCirclePageIndicator.setOnPageChangeListener(new PageChangeListener());
+//
+//        mViewPager.setCurrentItem(currentPage);
 
-        mImagePagerAdapter = new ImagePagerAdapter(mContext, imageUrls);
-
-        mViewPager.setAdapter(mImagePagerAdapter);
-        mCirclePageIndicator.setViewPager(mViewPager);
-
-        mCirclePageIndicator.setOnPageChangeListener(new PageChangeListener());
-
-        mViewPager.setCurrentItem(currentPage);
+//        Log.i("Test2", mTick.getSeason());
 
         try {
             if (args.getParcelable(TickGuideMasterActivity.KEY_TICK_DETAIL) != null) {
                 mTick = args.getParcelable(TickGuideMasterActivity.KEY_TICK_DETAIL);
             }
 
-            txtView_tickName.setText(mTick.getTickName());
+            txtView_tickFormalNameDetails.setText(mTick.getScientific_name());
+            Log.i("Test2", mTick.getScientific_name());
             txtView_tickSpecies.setText(mTick.getSpecies());
             txtView_knownFor.setText(mTick.getKnown_for());
-            txtView_tickFormalName.setText(mTick.getScientific_name());
+            txtView_tickFormalNameHeading.setText(mTick.getScientific_name());
             txtView_description.setText(mTick.getDescription());
+            txtView_season.setText(mTick.getSeason());
             txtView_tickLocation.setText(mTick.getFound_near_habitat());
+            txtView_geoLocation.setText(mTick.getGeoLocation());
 
             // for demo purpose, just create an ArrayList of images and show it from drawable
 
 
-            //Picasso.with(mContext).load(mTick.getImageUrl()).into(imageView_tickImage);
+           // Picasso.with(mContext).load(mTick.getImageUrl()).into(imageView_tickImage);
+            imageUrls = new ArrayList<>();
+            Log.i("Test", mTick.getImageUrl());
+            imageUrls.add(mTick.getImageUrl());
+//        imageUrls.add("https://s3-us-west-2.amazonaws.com/tickphotos/Ixodes+pacificus_collage.png"); // list of Strings
+//        imageUrls.add(R.drawable.image_2);
+//        imageUrls.add(R.drawable.image_3);
+//        imageUrls.add(R.drawable.image_4);
+
+            mImagePagerAdapter = new ImagePagerAdapter(mContext, imageUrls);
+            mViewPager.setAdapter(mImagePagerAdapter);
+            mCirclePageIndicator.setViewPager(mViewPager);
+
+            mCirclePageIndicator.setOnPageChangeListener(new PageChangeListener());
+
+            mViewPager.setCurrentItem(currentPage);
+
+
+            tickInfoButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(getActivity(), TickInfoActivity.class);
+                    intent.putExtra("TickData", mTick);
+                    getActivity().startActivity(intent);
+                }
+            });
+
+
         } catch (NullPointerException ne) {
             throw new NullPointerException();
         } catch (Exception e) {
@@ -144,6 +204,10 @@ public class TickGuideDetailFragment extends Fragment {
 
         return rootView;
     }
+
+
+
+
 
     @Override
     public void onResume() {
@@ -169,5 +233,9 @@ public class TickGuideDetailFragment extends Fragment {
         public void onPageSelected(int position) {
             currentPage = position;
         }
+
     }
+
+
 }
+
